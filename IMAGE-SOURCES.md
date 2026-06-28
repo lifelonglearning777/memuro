@@ -2,6 +2,9 @@
 
 ## トップ画面のキャラクター
 
+- `machiru-front.png` / `machiru-wave.png`
+- 利用者提供画像「名称未設定のデザイン.PNG」をもとに、トップ画面用に背景を切り抜いて作成
+
 - `machiru-daisuke.png`
 - JAめむろ「のうきょう通信 第20号」（2026年3月30日発行）掲載の公式キャラクター「まちるだいすけ」
 - 出典：https://www.ja-memuro.or.jp/cms/wp-content/uploads/2026/03/%E3%81%AE%E3%81%86%E3%81%8D%E3%82%87%E3%81%86%E9%80%9A%E4%BF%A1_%E7%AC%AC20%E5%8F%B7.pdf
