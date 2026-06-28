@@ -33,16 +33,6 @@ body {
   font-weight: 700;
 }
 
-body::after {
-  content: "・  ・    ・  ・  ・    ・";
-  position: fixed;
-  inset: auto 0 0;
-  height: 38px;
-  color: rgba(47,116,61,.25);
-  letter-spacing: 34px;
-  transform: rotate(-3deg);
-  pointer-events: none;
-}
 .sky {
   position: fixed;
   inset: 56px 0 auto;
@@ -59,7 +49,8 @@ ruby { white-space: nowrap; ruby-align: center; }
 h1, h2, p, button {
   line-break: strict;
   word-break: normal;
-  word-break: auto-phrase;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   text-wrap: pretty;
 }
 .skip-link { position: fixed; left: 8px; top: -60px; z-index: 99; background: #fff; padding: 10px; }
