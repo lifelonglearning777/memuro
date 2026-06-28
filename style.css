@@ -1,340 +1,343 @@
-:root {
-  --grass: #70b957;
-  --grass-dark: #367b3f;
-  --cream: #fff8df;
-  --sky: #8dd8ee;
-  --corn: #ffd84d;
-  --ink: #263d3b;
-  --white: #fff;
-  --red: #e96957;
-  --shadow: 0 6px 0 rgba(39, 83, 61, .16);
+"use strict";
+
+// 問題データ。image を空文字にすると画像枠を表示しません。
+// 写真を追加するときは images フォルダへ入れ、ファイル名を image に指定します。
+const questions = [
+  { level:"beginner", question:"芽室町があるのは、どの都道府県？", image:"memuro-map.jpg", choices:["北海道","青森県","長野県"], answer:0, explanation:"芽室町は北海道の十勝地方にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町がある平野は？", image:"fields.jpg", choices:["十勝平野","石狩平野","関東平野"], answer:0, explanation:"芽室町は広い十勝平野にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町の西に見える山なみは？", image:"fields.jpg", choices:["日高山脈","富士山","大雪山だけ"], answer:0, explanation:"町の西側には日高山脈が広がります。", source:"めむろ学 p.14–17" },
+  { level:"beginner", question:"芽室町の土地で多く見られるものは？", image:"fields.jpg", choices:["広い畑","高いビル","海岸"], answer:0, explanation:"芽室町には広い畑がたくさんあります。", source:"めむろ学 p.16–19" },
+  { level:"beginner", question:"芽室町にとなり合う大きな市は？", image:"memuro-map.jpg", choices:["帯広市","札幌市","函館市"], answer:0, explanation:"芽室町は帯広市にとなり合っています。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"町の中心を通る鉄道の駅は？", image:"old-station.jpg", choices:["芽室駅","釧路駅","旭川駅"], answer:0, explanation:"JR根室本線の芽室駅があります。写真は開業したころの芽室駅です。", source:"めむろ学 p.72" },
+  { level:"beginner", question:"町の仕事を行う中心の建物は？", image:"town-hall.jpg", choices:["芽室町役場","水族館","空港"], answer:0, explanation:"町役場では、くらしを支えるいろいろな仕事をします。", source:"めむろ学 p.20–23" },
+  { level:"beginner", question:"本を借りたり調べたりする場所は？", image:"library.jpg", choices:["図書館","消防署","交番"], answer:0, explanation:"図書館では本や資料を利用できます。", source:"めむろ学 p.20–23" },
+  { level:"beginner", question:"芽室町を流れる川はどれ？", image:"memuro-river.jpg", choices:["芽室川","信濃川","四万十川"], answer:0, explanation:"町には十勝川、芽室川、美生川などが流れます。", source:"めむろ学 p.14–17" },
+  { level:"beginner", question:"芽室町は海に面している？", image:"", choices:["面していない","面している","島である"], answer:0, explanation:"芽室町は北海道の内陸にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町の代表的な作物は？", image:"corn.jpg", choices:["スイートコーン","パイナップル","バナナ"], answer:0, explanation:"スイートコーンは芽室町を代表する作物の一つです。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"じゃがいもの別のよび方は？", image:"potato.jpg", choices:["ばれいしょ","てんさい","小麦"], answer:0, explanation:"ばれいしょは、じゃがいものことです。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"パンやめんの材料になる作物は？", image:"wheat.jpg", choices:["小麦","小豆","ビート"], answer:0, explanation:"小麦はパンやめんなどに加工されます。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"砂糖の材料になる作物は？", image:"sugar-beet.jpg", choices:["てんさい（ビート）","たまねぎ","大豆"], answer:0, explanation:"てんさいは砂糖の大切な原料です。", source:"めむろ学 p.26–35" },
+  { level:"beginner", question:"芽室町の農業で中心となるのは？", image:"tractor.jpg", choices:["畑作","真珠づくり","海の漁業"], answer:0, explanation:"広い土地を生かした畑作がさかんです。", source:"めむろ学 p.26–37" },
+  { level:"beginner", question:"畑で作物を育てる仕事をする人は？", image:"", choices:["農家","駅員","船員"], answer:0, explanation:"農家の人たちが工夫して作物を育てています。", source:"めむろ学 p.26–37" },
+  { level:"beginner", question:"火事のときに出動する車は？", image:"fire-engine.jpg", choices:["消防車","ごみ収集車","トラクター"], answer:0, explanation:"消防車は火を消すための道具を運びます。", source:"めむろ学 p.50–59" },
+  { level:"beginner", question:"急な病気やけがの人を運ぶ車は？", image:"ambulance.jpg", choices:["救急車","バス","除雪車"], answer:0, explanation:"救急車が病院などへ安全に運びます。", source:"めむろ学 p.50–59" },
+  { level:"beginner", question:"赤信号のとき、歩く人はどうする？", image:"", choices:["止まって待つ","急いで渡る","道路で遊ぶ"], answer:0, explanation:"交通ルールを守ることが安全につながります。", source:"めむろ学 p.62–69" },
+  { level:"beginner", question:"ごみを決められた日に出すのはなぜ？", image:"", choices:["安全に集めるため","道に広げるため","鳥にあげるため"], answer:0, explanation:"分別と収集日のルールが町をきれいにします。", source:"めむろ学 p.104–117" },
+  { level:"beginner", question:"使える物をくり返し使うことは？", image:"reuse.jpg", choices:["リユース","リセット","リレー"], answer:0, explanation:"リユースは、物をくり返し使うことです。", source:"めむろ学 p.115" },
+  { level:"beginner", question:"水道の水は、どこへ送られる？", image:"water-plant.jpg", choices:["家や学校","空の上","海の船だけ"], answer:0, explanation:"きれいにした水が水道管で家や学校へ届きます。", source:"めむろ学 p.90–99" },
+  { level:"beginner", question:"冬の道路で活やくする車は？", image:"snowplow.jpg", choices:["除雪車","消防車","田植え機"], answer:0, explanation:"除雪車が雪をよけて道路を通りやすくします。", source:"めむろ学 p.70–77" },
+  { level:"beginner", question:"町を地図で見ると分かることは？", image:"", choices:["場所や広がり","食べ物の味","音の大きさ"], answer:0, explanation:"地図では場所、道、土地の使われ方などが分かります。", source:"めむろ学 p.14–23" },
+  { level:"beginner", question:"町を調べるよい方法は？", image:"", choices:["見学して話を聞く","思いつきだけで決める","何も見ない"], answer:0, explanation:"見学やインタビューで本物の情報を集められます。", source:"めむろ学 学び方コーナー" },
+
+  { level:"intermediate", question:"芽室町の農地は町の面積のおよそ何％？", image:"fields.jpg", choices:["約42％","約4％","約90％"], answer:0, explanation:"町の約42％が農地です。", source:"めむろ学 p.16・町公式「農業の概要」" },
+  { level:"intermediate", question:"芽室町の気候の特ちょうは？", image:"fields.jpg", choices:["晴れる日が多い","一年中雨","一年中暑い"], answer:0, explanation:"内陸性の気候で、日本有数の晴天率です。", source:"めむろ学 p.24–25" },
+  { level:"intermediate", question:"作物を同じ畑で順番に変えて育てることは？", image:"potato.jpg", choices:["輪作","連休","分別"], answer:0, explanation:"輪作は土を守り、病気などを防ぐ工夫です。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"大きな農業機械を使う主な理由は？", image:"harvester.jpg", choices:["広い畑で効率よく作業するため","音を出すため","道をせまくするため"], answer:0, explanation:"広い畑を少ない時間で作業できます。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"農家が天気をよく調べるのはなぜ？", image:"tractor.jpg", choices:["作業や育ち方に関係するから","駅名を決めるから","本を返すから"], answer:0, explanation:"種まきや収穫などは天気と深く関わります。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"農作物を集め、販売も支える組織は？", image:"ja.jpg", choices:["JA","消防署","図書館"], answer:0, explanation:"JAは農家の仕事や農産物の流通を支えます。", source:"めむろ学 p.34–39" },
+  { level:"intermediate", question:"工場で農産物を加工するよさは？", image:"food-factory.jpg", choices:["食品にして届けられる","畑を海にできる","雪を降らせる"], answer:0, explanation:"地域の作物をさまざまな食品に加工できます。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"ビートから作られるものは？", image:"sugar-beet.jpg", choices:["砂糖","紙だけ","ガラス"], answer:0, explanation:"製糖工場では、てんさいから砂糖を作ります。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"店が品物をならべるときの工夫は？", image:"supermarket.jpg", choices:["買いやすく分類する","全部かくす","床に置く"], answer:0, explanation:"種類や使い方で分け、選びやすくしています。", source:"めむろ学 p.78–89" },
+  { level:"intermediate", question:"品物は店に来る前、何で運ばれることが多い？", image:"delivery-truck.jpg", choices:["トラック","救急車","消防車"], answer:0, explanation:"道路を使って多くの品物が運ばれます。", source:"めむろ学 p.78–89" },
+  { level:"intermediate", question:"地元で作った物を地元で食べることは？", image:"supermarket.jpg", choices:["地産地消","遠足","輪作"], answer:0, explanation:"地産地消は地域の農業を身近に感じる取り組みです。", source:"めむろ学 p.26–49" },
+  { level:"intermediate", question:"消防署でいつでも出動できるようにする工夫は？", image:"fire-station.jpg", choices:["交代で勤務する","夜はだれもいない","車を動かさない"], answer:0, explanation:"いつ起きるか分からない火事や救急に備えます。", source:"めむろ学 p.50–59" },
+  { level:"intermediate", question:"地域の消防団は、だれが参加する？", image:"fire-engine.jpg", choices:["地域でくらす人たち","外国の船員だけ","ロボットだけ"], answer:0, explanation:"仕事を持ちながら地域を守る人たちが活動します。", source:"めむろ学 p.58–61" },
+  { level:"intermediate", question:"防災訓練を行う目的は？", image:"drill.jpg", choices:["災害時に安全に動くため","速く走る競争のため","買い物のため"], answer:0, explanation:"ふだんの練習が、いざという時の安全につながります。", source:"めむろ学 p.58–61" },
+  { level:"intermediate", question:"110番につながるのは？", image:"", choices:["警察","消防・救急","図書館"], answer:0, explanation:"事件や事故は110番、火事や救急は119番です。", source:"めむろ学 p.50–69" },
+  { level:"intermediate", question:"119番につながるのは？", image:"", choices:["消防・救急","警察","町の店"], answer:0, explanation:"火事や救急のときは119番です。", source:"めむろ学 p.50–59" },
+  { level:"intermediate", question:"浄水場の大切な仕事は？", image:"water-plant.jpg", choices:["水をきれいにする","ごみを燃やす","電車を動かす"], answer:0, explanation:"安全に飲める水にして送り出します。", source:"めむろ学 p.90–99" },
+  { level:"intermediate", question:"水を大切にする行動は？", image:"", choices:["使わない時は止める","出しっぱなしにする","道路にまく"], answer:0, explanation:"必要な分だけ使うことが節水になります。", source:"めむろ学 p.90–103" },
+  { level:"intermediate", question:"くりりんセンターで燃やすごみの熱は？", image:"waste-center.jpg", choices:["発電に利用する","そのまま捨てる","氷にする"], answer:0, explanation:"ごみを燃やした熱を利用して電気を作ります。", source:"めむろ学 p.108" },
+  { level:"intermediate", question:"ごみになる物を受け取らない4Rは？", image:"waste-center.jpg", choices:["リフューズ","リユース","リサイクル"], answer:0, explanation:"Refuseは、不要な物をことわることです。", source:"めむろ学 p.115" },
+  { level:"intermediate", question:"ごみそのものを減らす4Rは？", image:"", choices:["リデュース","リユース","リサイクル"], answer:0, explanation:"Reduceは、ごみを減らす工夫です。", source:"めむろ学 p.115" },
+  { level:"intermediate", question:"資源を原料にもどして作り直すことは？", image:"waste-center.jpg", choices:["リサイクル","リフューズ","リデュース"], answer:0, explanation:"資源を分別し、新しい製品の原料にします。", source:"めむろ学 p.104–117" },
+  { level:"intermediate", question:"鉄道や道路が大切な理由は？", image:"old-station.jpg", choices:["人や物を運ぶため","川を止めるため","畑を小さくするため"], answer:0, explanation:"交通はくらしや産業をつないでいます。", source:"めむろ学 p.70–77" },
+  { level:"intermediate", question:"芽室町に多い食品工場と深い関係があるのは？", image:"", choices:["地元の農産物","海のサンゴ","南国の果物だけ"], answer:0, explanation:"豊かな農産物を生かす食品製造が発達しています。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"くらしを良くする話し合いに大切なのは？", image:"", choices:["いろいろな人の意見を聞く","一人だけで決める","資料を見ない"], answer:0, explanation:"資料と多くの意見をもとに考えることが大切です。", source:"めむろ学 学び方コーナー" },
+
+  { level:"advanced", question:"「芽室」の名のもとになったアイヌ語は？", image:"ainu-place-name.jpg", choices:["メム・オロ","サッ・ポロ","トカプチだけ"], answer:0, explanation:"メム・オロが転じて「芽室」になったとされます。", source:"めむろ学 p.142–159・町公式「芽室町について」" },
+  { level:"advanced", question:"「メム・オロ」に近い意味は？", image:"spring-river.jpg", choices:["泉や池から流れてくる川","大きな海","高い火山"], answer:0, explanation:"川の源の泉や池から流れてくる川を表します。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"文字の記録で「芽室」が初めて登場した年は？", image:"old-map.jpg", choices:["1800年","2000年","1600年"], answer:0, explanation:"1800年の十勝川調査の地図に「メモロ」と記されました。", source:"めむろ学 p.160–169・町公式「町の紹介」" },
+  { level:"advanced", question:"芽室に戸長役場が置かれた年は？", image:"old-office.jpg", choices:["1900年","1945年","2020年"], answer:0, explanation:"1900年に戸長役場が置かれ、行政の中心となりました。", source:"めむろ学 p.160–169・町公式「町の紹介」" },
+  { level:"advanced", question:"芽室駅が開業した年は？", image:"old-station.jpg", choices:["1907年","1807年","2007年"], answer:0, explanation:"芽室駅は1907（明治40）年に開業しました。", source:"めむろ学 p.72" },
+  { level:"advanced", question:"芽室村が芽室町になった年は？", image:"old-station.jpg", choices:["1942年","1906年","1992年"], answer:0, explanation:"1942年に町制が施行され、芽室町になりました。", source:"めむろ学 p.99・町の歴史資料" },
+  { level:"advanced", question:"昔の道具や町の歩みを学べる施設は？", image:"nenrin.jpg", choices:["ふるさと歴史館ねんりん","空港","水族館"], answer:0, explanation:"ねんりんでは芽室の歴史やくらしを学べます。", source:"めむろ学 p.160–177" },
+  { level:"advanced", question:"北海道の先住民族は？", image:"ainu-culture.jpg", choices:["アイヌ民族","マオリ民族","サーミ民族"], answer:0, explanation:"アイヌ民族は独自の言語や文化を育んできました。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌの人々が大切にしてきたものは？", image:"ainu-culture.jpg", choices:["自然とのつながり","大量のビル","海底トンネルだけ"], answer:0, explanation:"自然の中のさまざまなものにカムイを感じてきました。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌ語で神を表す言葉は？", image:"", choices:["カムイ","コタン","モシリ"], answer:0, explanation:"カムイは神や、人の力をこえた存在を表します。", source:"めむろ学 p.148–153" },
+  { level:"advanced", question:"アイヌ語で集落を表す言葉は？", image:"kotan.jpg", choices:["コタン","カムイ","イオマンテ"], answer:0, explanation:"コタンは人々がくらす集落です。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌ文化を学ぶとき大切な姿勢は？", image:"", choices:["敬意をもって正しく知る","決めつける","昔だけのものとする"], answer:0, explanation:"今も受けつがれる文化として敬意をもって学びます。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"芽室町で生まれたスポーツは？", image:"gateball.jpg", choices:["ゲートボール","野球","ラグビー"], answer:0, explanation:"ゲートボールは芽室町が発祥の地です。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールが考案されたのは、いつごろ？", image:"gateball.jpg", choices:["第二次世界大戦後","江戸時代の初め","縄文時代"], answer:0, explanation:"戦後、子どもたちが楽しめるスポーツとして考案されました。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールでボールを通すものは？", image:"gateball.jpg", choices:["ゲート","ゴールネット","バスケット"], answer:0, explanation:"スティックで打ち、決められたゲートを通します。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールは主にどんな競技？", image:"gateball.jpg", choices:["チームで協力する競技","一人だけの水泳","雪上の競技だけ"], answer:0, explanation:"仲間と作戦を考えながら進めるチーム競技です。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"地域の伝統を未来へつなぐ方法は？", image:"taiko.jpg", choices:["学び、伝え、参加する","忘れる","資料を捨てる"], answer:0, explanation:"知ること、体験すること、伝えることが継承につながります。", source:"めむろ学 p.178–191" },
+  { level:"advanced", question:"芽室町の郷土芸能の一つは？", image:"memuoro-taiko.jpg", choices:["メムオロ太鼓","阿波おどりだけ","ねぶただけ"], answer:0, explanation:"メムオロ太鼓は地域で受けつがれる郷土芸能です。", source:"めむろ学 p.188–191" },
+  { level:"advanced", question:"昔の町の様子を調べる資料は？", image:"historic-photo.jpg", choices:["古い写真や地図","今日の天気だけ","うわさだけ"], answer:0, explanation:"写真、地図、年表、聞き取りを比べると変化が分かります。", source:"めむろ学 p.160–177" },
+  { level:"advanced", question:"昔と今を比べるとき大切なのは？", image:"", choices:["同じ場所や項目で比べる","一つだけ見る","想像だけで決める"], answer:0, explanation:"比べる条件をそろえると変化を見つけやすくなります。", source:"めむろ学 学び方コーナー" },
+  { level:"advanced", question:"開拓が進む前から北海道にくらしていた人々は？", image:"", choices:["アイヌの人々","宇宙飛行士","南極観測隊"], answer:0, explanation:"アイヌの人々は長く北海道で文化を築いてきました。", source:"めむろ学 p.142–169" },
+  { level:"advanced", question:"鉄道が開通して町に起きた変化は？", image:"old-station.jpg", choices:["人や物が行き来しやすくなった","川が消えた","山がなくなった"], answer:0, explanation:"鉄道は町の発展や物の輸送に大きく関わりました。", source:"めむろ学 p.70–77・p.160–177" },
+  { level:"advanced", question:"上水道が芽室町にできた年は？", image:"water-plant.jpg", choices:["1958年","1858年","2008年"], answer:0, explanation:"年表には1958年に上水道ができたとあります。", source:"めむろ学 p.99" },
+  { level:"advanced", question:"地域の歴史を聞き取る相手としてよいのは？", image:"", choices:["長く地域にくらす人","だれにも聞かない","町を知らない人だけ"], answer:0, explanation:"体験した人の話は、資料と合わせて大切な手がかりになります。", source:"めむろ学 学び方コーナー" },
+  { level:"advanced", question:"地域文化を調べた後にするとよいことは？", image:"", choices:["分かったことを発信する","自分だけでかくす","資料をなくす"], answer:0, explanation:"まとめて伝えることで、文化を知る人が増えます。", source:"めむろ学 p.188–191" }
+];
+
+const levelInfo = {
+  beginner: { name: "まちたんけん", label: "ビギナー級" },
+  intermediate: { name: "くらし・しごとたんけん", label: "中級" },
+  advanced: { name: "れきし・文化たんけん", label: "上級" }
+};
+const imageCredits = {
+  "memuro-map.jpg": "写真・地図：めむろ学 p.13",
+  "fields.jpg": "写真：めむろ学 p.12",
+  "corn.jpg": "写真：めむろ学 p.26",
+  "sugar-beet.jpg": "写真：めむろ学 p.26",
+  "wheat.jpg": "写真：めむろ学 p.26",
+  "potato.jpg": "写真：めむろ学 p.28",
+  "harvester.jpg": "写真：めむろ学 p.28",
+  "tractor.jpg": "写真：めむろ学 p.30",
+  "food-factory.jpg": "写真：めむろ学 p.32",
+  "supermarket.jpg": "写真：めむろ学 p.40",
+  "fire-engine.jpg": "写真：めむろ学 p.51",
+  "fire-station.jpg": "写真：めむろ学 p.51",
+  "drill.jpg": "写真：めむろ学 p.52",
+  "old-station.jpg": "写真：めむろ学 p.72",
+  "water-plant.jpg": "写真・図：めむろ学 p.99",
+  "waste-center.jpg": "図：めむろ学 p.108",
+  "gateball.jpg": "写真：めむろ学 p.143",
+  "ainu-culture.jpg": "写真：めむろ学 p.155",
+  "historic-photo.jpg": "写真：めむろ学 p.149"
+};
+const STORAGE_KEY = "memuro-tanken-progress-v1";
+const screens = [...document.querySelectorAll(".screen")];
+const $ = (id) => document.getElementById(id);
+
+let state = {
+  level: null,
+  queue: [],
+  index: 0,
+  score: 0,
+  wrong: [],
+  reviewMode: false,
+  sound: true,
+  locked: false,
+  currentChoices: []
+};
+
+function getLevelQuestions(level) {
+  return questions.filter((item) => item.level === level);
 }
 
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-
-html, body { min-height: 100%; }
-body {
-  margin: 0;
-  color: var(--ink);
-  background:
-    linear-gradient(105deg, transparent 0 48%, rgba(107,172,78,.07) 48% 52%, transparent 52% 100%),
-    linear-gradient(#dff6ff 0 34%, #f9f3d4 34% 100%);
-  font-family: Meiryo, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
+// 将来ランダム出題にする場合は、この関数の返り値をシャッフルします。
+function buildQuestionQueue(level) {
+  return getLevelQuestions(level).map((item) => questions.indexOf(item));
 }
 
-body::after {
-  content: "・  ・    ・  ・  ・    ・";
-  position: fixed;
-  inset: auto 0 0;
-  height: 38px;
-  color: rgba(47,116,61,.25);
-  letter-spacing: 34px;
-  transform: rotate(-3deg);
-  pointer-events: none;
-}
-.sky {
-  position: fixed;
-  inset: 56px 0 auto;
-  height: 150px;
-  z-index: -1;
-  opacity: .16;
-  background: linear-gradient(145deg, transparent 0 43%, #4b8d71 44% 55%, transparent 56%) 0 0 / 240px 150px repeat-x;
-  clip-path: polygon(0 75%, 9% 42%, 17% 67%, 27% 25%, 39% 72%, 50% 35%, 63% 70%, 75% 18%, 87% 62%, 100% 35%, 100% 100%, 0 100%);
+function shuffleChoices(item) {
+  const choices = item.choices.map((text, originalIndex) => ({ text, originalIndex }));
+  for (let index = choices.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [choices[index], choices[randomIndex]] = [choices[randomIndex], choices[index]];
+  }
+  const unchanged = choices.every((choice, index) => choice.originalIndex === index);
+  if (unchanged) [choices[0], choices[1]] = [choices[1], choices[0]];
+  return choices;
 }
 
-button { font: inherit; color: inherit; }
-button:focus-visible, a:focus-visible { outline: 4px solid #1667c1; outline-offset: 3px; }
-.skip-link { position: fixed; left: 8px; top: -60px; z-index: 99; background: #fff; padding: 10px; }
-.skip-link:focus { top: 8px; }
-
-.app-header {
-  height: 64px;
-  max-width: 1120px;
-  margin: auto;
-  padding: 8px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.brand { display: flex; gap: 8px; align-items: center; border: 0; background: transparent; text-align: left; cursor: pointer; line-height: 1.05; }
-.brand strong { color: var(--grass-dark); font-size: 1.05rem; }
-.brand-mark { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; background: #fff; border: 2px solid var(--corn); border-radius: 50%; box-shadow: 0 4px 0 #d9aa25; }
-.brand-mark img { width: 115%; height: 115%; object-fit: contain; }
-.icon-button { width: 42px; height: 42px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 4px 0 rgba(53,91,74,.17); cursor: pointer; }
-
-main { min-height: calc(100vh - 64px); display: grid; place-items: center; padding: 8px 18px 18px; }
-.screen { width: min(1080px, 100%); }
-.top-screen { align-self: start; }
-.hero {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 230px;
-  overflow: hidden;
-  text-align: center;
-  margin: 4px auto 14px;
-  padding: 14px 28px 18px;
-  border: 4px solid #fff;
-  border-radius: 30px;
-  box-shadow: var(--shadow);
-  background:
-    linear-gradient(110deg, rgba(255,255,255,.06), rgba(20,67,47,.24)),
-    url("images/memuro-aerial.jpg") center 45% / cover no-repeat;
-}
-.hero::after {
-  content: none;
-}
-.hero-center {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  width: min(88%, 700px);
-  padding: 15px clamp(22px, 4vw, 42px);
-  border: 1px solid rgba(255,255,255,.82);
-  border-radius: 22px;
-  text-align: left;
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,.18) 0%,
-    rgba(255,255,255,.58) 23%,
-    rgba(255,255,255,.66) 50%,
-    rgba(255,255,255,.58) 77%,
-    rgba(255,255,255,.18) 100%
-  );
-  box-shadow: 0 14px 34px rgba(24,52,43,.22);
-  -webkit-backdrop-filter: blur(12px) saturate(1.12);
-  backdrop-filter: blur(12px) saturate(1.12);
-}
-.hero-mascot {
-  width: 116px;
-  height: 116px;
-  object-fit: contain;
-  margin-right: clamp(14px, 3vw, 30px);
-  filter: drop-shadow(0 7px 7px rgba(28,64,48,.22));
-}
-.eyebrow { margin: 0 0 4px; color: var(--grass-dark); font-size: .92rem; letter-spacing: .1em; }
-h1 { margin: 0; line-height: 1.17; font-size: clamp(1.55rem, 4vw, 2.55rem); }
-h1 span { color: inherit; }
-.hero h1 {
-  display: grid;
-  gap: 2px;
-  max-width: 760px;
-  color: #245f3b;
-  font-family: Meiryo, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-  font-size: clamp(2rem, 4.4vw, 3.05rem);
-  line-height: 1.02;
-  text-shadow: 0 1px 10px rgba(255,255,255,.92);
-  font-feature-settings: "palt";
-}
-.hero-title-place {
-  font-size: .54em;
-  font-weight: 700;
-  letter-spacing: .18em;
-  color: #397250;
-}
-.hero-title-main {
-  font-size: 1em;
-  font-weight: 800;
-  letter-spacing: .035em;
-  white-space: nowrap;
-}
-.hero h1::after {
-  content: "";
-  display: block;
-  width: 54px;
-  height: 4px;
-  margin-top: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--corn), #f2b52f);
+function showScreen(id) {
+  screens.forEach((screen) => { screen.hidden = screen.id !== id; });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-.level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.level-card {
-  position: relative;
-  min-height: 178px;
-  padding: 23px 16px 16px;
-  border: 3px solid rgba(255,255,255,.75);
-  border-radius: 27px;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform .15s, box-shadow .15s;
-}
-.level-icon { font-size: 2.2rem; filter: drop-shadow(0 3px 0 rgba(255,255,255,.65)); }
-.level-card:hover { transform: translateY(-4px); box-shadow: 0 10px 0 rgba(39,83,61,.14); }
-.level-card:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(39,83,61,.18); }
-.beginner { background: #c9ed9d; }
-.intermediate { background: #b8e8f4; }
-.advanced { background: #ffe47a; }
-.level-stamp { position: absolute; top: -12px; left: 16px; width: 45px; height: 45px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: var(--grass-dark); font-size: 1.25rem; border: 3px dashed currentColor; transform: rotate(-8deg); }
-.level-name { margin-top: 10px; font-size: clamp(1.3rem, 2.35vw, 1.68rem); line-height: 1.18; }
-.level-sub { min-height: 1.5em; font-size: 1.08rem; margin: 5px 0 12px; }
-.level-meta { margin-top: auto; padding: 8px 18px; background: rgba(255,255,255,.77); border-radius: 999px; font-size: .95rem; }
-.resume-area { text-align: center; margin: -5px 0 10px; }
-.resume-button { border: 0; border-radius: 999px; padding: 9px 22px; background: #fff; color: var(--grass-dark); box-shadow: 0 4px 0 rgba(39,83,61,.14); cursor: pointer; }
-
-.quiz-screen { max-width: 900px; }
-.progress-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 5px; }
-.progress-row p { margin: 0; }
-#questionCounter { font-size: 1.18rem; }
-#scoreChip { justify-self: end; background: var(--corn); border-radius: 999px; padding: 5px 13px; }
-.back-button { justify-self: start; border: 0; background: transparent; cursor: pointer; }
-.progress-track { height: 9px; overflow: hidden; background: rgba(255,255,255,.8); border-radius: 999px; margin-bottom: 9px; }
-#progressBar { height: 100%; width: 4%; background: linear-gradient(90deg, var(--grass), #a6d55e); border-radius: inherit; transition: width .3s; }
-.question-card { background: rgba(255,255,255,.94); border: 4px solid #fff; border-radius: 27px; padding: clamp(12px, 2vw, 20px); box-shadow: var(--shadow); }
-.question-main { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px; align-items: center; min-height: 155px; }
-.course-label { display: inline-block; margin: 0 0 8px; padding: 5px 11px; color: var(--grass-dark); background: #e1f4ce; border-radius: 999px; font-size: .9rem; }
-#questionText { margin: 0; font-size: clamp(1.55rem, 3.5vw, 2.25rem); line-height: 1.5; }
-.image-frame { margin: 0; height: 155px; overflow: hidden; border-radius: 19px; background: #edf4e7; border: 3px solid #e4eecf; }
-.image-frame img { width: 100%; height: 100%; object-fit: cover; transition: filter .45s ease, opacity .45s ease, transform .45s ease; }
-.image-frame figcaption { position: absolute; right: 6px; bottom: 5px; padding: 3px 7px; color: #fff; background: rgba(24,55,42,.78); border-radius: 999px; font-size: .58rem; }
-.image-frame { position: relative; }
-.image-curtain {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  place-content: center;
-  gap: 4px;
-  text-align: center;
-  color: var(--grass-dark);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,.85) 0 4px, transparent 5px),
-    linear-gradient(145deg, #fff8c8, #dff1c9);
-  transition: opacity .35s ease, transform .35s ease;
-}
-.image-curtain span { font-size: 2rem; }
-.image-curtain strong { font-size: .82rem; line-height: 1.35; }
-.image-frame.is-covered img { filter: blur(12px); opacity: .22; transform: scale(1.08); }
-.image-frame.is-covered figcaption { opacity: 0; }
-.image-frame.is-revealed img { animation: photoReveal .48s ease both; }
-.image-frame.is-revealed .image-curtain { opacity: 0; transform: scale(.9); pointer-events: none; }
-@keyframes photoReveal {
-  from { opacity: .2; transform: scale(1.08); }
-  to { opacity: 1; transform: scale(1); }
-}
-.question-main.no-image { grid-template-columns: 1fr; min-height: 115px; text-align: center; }
-.choice-list { display: grid; gap: 9px; margin-top: 12px; }
-.choice-button {
-  width: 100%;
-  min-height: 60px;
-  border: 2px solid #dbe8d2;
-  border-radius: 17px;
-  background: #f9fff5;
-  box-shadow: 0 4px 0 #d7e3d0;
-  cursor: pointer;
-  text-align: left;
-  padding: 10px 17px;
-  font-size: 1.12rem;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: transform .1s;
-}
-.choice-button { -webkit-tap-highlight-color: transparent; }
-@media (hover: hover) and (pointer: fine) {
-  .choice-button:hover { background: #fff6c6; transform: translateY(-1px); }
-}
-.choice-button:active { transform: translateY(3px); box-shadow: 0 1px 0 #d7e3d0; }
-.choice-button:disabled { cursor: default; }
-.choice-letter { flex: 0 0 34px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--grass); }
-.choice-button.correct { background: #dff4d1; border-color: var(--grass); }
-.choice-button.wrong { background: #ffe6dd; border-color: var(--red); }
-.feedback { margin: 10px auto 0; max-width: 720px; padding: 8px 16px; border-radius: 18px; background: #fff7c9; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 0 rgba(91,79,35,.13); }
-.feedback-mascot {
-  flex: 0 0 auto;
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  filter: drop-shadow(0 3px 0 rgba(39,83,61,.13));
-}
-.feedback strong { color: var(--grass-dark); }
-.feedback p { margin: 2px 0 0; font-size: .98rem; font-weight: 600; line-height: 1.5; }
-.feedback strong { font-size: 1.08rem; }
-
-.result-screen { max-width: 680px; text-align: center; }
-.result-card { background: rgba(255,255,255,.95); border: 5px solid var(--corn); border-radius: 30px; padding: 22px; box-shadow: var(--shadow); }
-.result-card.fail { border-color: var(--sky); }
-.result-seal { width: 75px; height: 75px; display: grid; place-items: center; margin: -4px auto 5px; border: 4px dashed var(--grass); border-radius: 50%; font-size: 2.7rem; }
-.result-card h2 { margin: 4px 0; font-size: clamp(1.7rem, 5vw, 2.65rem); color: var(--grass-dark); }
-.score-display { display: flex; justify-content: center; align-items: baseline; gap: 7px; }
-.score-display strong { font-size: 4rem; line-height: 1; color: #e09b00; }
-#resultSummary { margin: 8px 0; }
-.certificate { max-width: 470px; margin: 12px auto; padding: 11px; border: 5px double #d6a81d; background: #fffdf1; display: grid; gap: 5px; }
-.certificate p { margin: 0; letter-spacing: .25em; }
-.certificate strong { font-size: 1.2rem; }
-.certificate span { font-size: .8rem; font-weight: 600; }
-.result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 14px; }
-.primary-button, .secondary-button { min-height: 45px; border-radius: 14px; padding: 9px 18px; cursor: pointer; }
-.primary-button { border: 0; color: #fff; background: var(--grass-dark); box-shadow: 0 4px 0 #225329; }
-.secondary-button { border: 2px solid #bdd0b7; background: #fff; }
-
-footer { min-height: 30px; text-align: center; font-size: .72rem; color: #58705e; }
-ruby { ruby-align: center; }
-rt { font-size: .5em; font-weight: 700; color: #315f44; }
-
-@media (max-width: 700px) {
-  .app-header { height: 56px; padding: 6px 12px; }
-  main { min-height: calc(100vh - 80px); padding: 5px 10px 12px; }
-  .brand { font-size: .75rem; }
-  .brand-mark, .icon-button { width: 37px; height: 37px; }
-  .hero { margin-bottom: 10px; min-height: 205px; padding: 10px 16px 15px; }
-  .hero-center { width: min(92%, 660px); padding: 12px 22px; }
-  .hero-mascot { width: 96px; height: 96px; }
-  .hero h1 { font-size: clamp(1.9rem, 6.5vw, 2.65rem); }
-  .level-grid { gap: 8px; }
-  .level-card { min-height: 145px; padding: 20px 7px 10px; border-radius: 20px; }
-  .level-icon { font-size: 1.75rem; }
-  .level-stamp { width: 36px; height: 36px; top: -7px; }
-  .level-sub { font-size: .9rem; }
-  .level-meta { font-size: .78rem; }
-  .question-main { min-height: 120px; grid-template-columns: 1.3fr .7fr; gap: 9px; }
-  .image-frame { height: 120px; border-radius: 13px; }
-  .choice-list { gap: 7px; margin-top: 8px; }
-  .choice-button { min-height: 54px; padding: 7px 11px; font-size: 1rem; }
-  .feedback { margin-top: 7px; padding: 6px 10px; }
+function startQuiz(level, queue = buildQuestionQueue(level), reviewMode = false) {
+  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [] };
+  showScreen("quizScreen");
+  renderQuestion();
+  saveProgress();
 }
 
-@media (max-width: 470px) {
-  .hero { min-height: 175px; padding: 7px 10px 12px; }
-  .hero-center { width: 94%; padding: 10px 14px; border-radius: 17px; }
-  .hero-mascot { width: 74px; height: 74px; margin-right: 10px; }
-  .hero h1 { font-size: clamp(1.48rem, 7vw, 1.75rem); line-height: 1.06; letter-spacing: .02em; }
-  .hero h1::after { width: 48px; height: 4px; margin-top: 7px; }
-  .level-grid { grid-template-columns: 1fr; }
-  .level-card { min-height: 92px; padding: 12px 12px 10px 60px; align-items: flex-start; justify-content: center; }
-  .level-icon { position: absolute; left: 16px; bottom: 12px; font-size: 1.65rem; }
-  .level-stamp { left: 12px; top: 25px; }
-  .level-name { margin-top: 0; font-size: 1.22rem; }
-  .level-sub { margin: 2px 0 4px; }
-  .level-meta { position: absolute; right: 9px; bottom: 9px; padding: 5px 9px; }
-  .question-main { grid-template-columns: 1fr; min-height: auto; text-align: center; }
-  .image-frame { height: 105px; }
-  #questionText { min-height: 58px; }
-  .feedback p { display: none; }
+function renderQuestion() {
+  const item = questions[state.queue[state.index]];
+  const total = state.queue.length;
+  const displayTotal = state.reviewMode ? total : 25;
+  $("questionCounter").innerHTML = `<ruby>第<rt>だい</rt></ruby>${state.index + 1}<ruby>問<rt>もん</rt></ruby> / ${displayTotal}<ruby>問<rt>もん</rt></ruby>`;
+  $("scoreChip").textContent = `★ ${state.score}`;
+  $("levelLabel").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）${state.reviewMode ? `・${kidHtml("復習")}` : ""}`;
+  setKidHtml($("questionText"), item.question);
+  $("progressBar").style.width = `${((state.index + 1) / total) * 100}%`;
+  document.querySelector(".progress-track").setAttribute("aria-valuemax", total);
+  document.querySelector(".progress-track").setAttribute("aria-valuenow", state.index + 1);
+  $("feedback").hidden = true;
+  state.locked = false;
+  state.currentChoices = shuffleChoices(item);
+
+  const main = document.querySelector(".question-main");
+  if (item.image) {
+    main.classList.remove("no-image");
+    $("imageFrame").hidden = false;
+    $("imageFrame").classList.add("is-covered");
+    $("imageFrame").classList.remove("is-revealed");
+    $("questionImage").src = `images/${item.image}`;
+    $("questionImage").alt = "もんだいの てがかりになる しゃしん";
+    setKidHtml($("imageCredit"), imageCredits[item.image] || "写真：地域学習書「めむろ学」");
+    $("questionImage").onerror = () => {
+      $("questionImage").onerror = null;
+      $("questionImage").src = "images/placeholder.jpg";
+      $("questionImage").alt = "めむろちょうの はたけと ひだかさんみゃくの イメージ（しゃしん じゅんびちゅう）";
+      setKidHtml($("imageCredit"), "写真準備中");
+    };
+  } else {
+    main.classList.add("no-image");
+    $("imageFrame").hidden = true;
+    $("imageFrame").classList.remove("is-covered", "is-revealed");
+    $("questionImage").removeAttribute("src");
+  }
+
+  $("choiceList").replaceChildren(...state.currentChoices.map((choice, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "choice-button";
+    button.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + index)}</span><span>${kidHtml(choice.text)}</span>`;
+    button.addEventListener("click", () => chooseAnswer(index));
+    return button;
+  }));
 }
 
-@media (max-height: 650px) and (min-width: 600px) {
-  .app-header { height: 50px; }
-  main { min-height: calc(100vh - 70px); padding-top: 2px; }
-  .hero { margin: 0 auto 8px; }
-  .hero { min-height: 180px; }
-  .hero-mascot { width: 88px; height: 88px; }
-  .hero h1 { font-size: 2rem; }
-  .level-card { min-height: 130px; }
-  .question-main { min-height: 110px; }
-  .image-frame { height: 110px; }
-  .choice-button { min-height: 50px; font-size: 1rem; }
+function chooseAnswer(selected) {
+  if (state.locked) return;
+  state.locked = true;
+  const item = questions[state.queue[state.index]];
+  const correct = state.currentChoices[selected].originalIndex === item.answer;
+  const buttons = [...document.querySelectorAll(".choice-button")];
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (state.currentChoices[index].originalIndex === item.answer) button.classList.add("correct");
+    if (index === selected && !correct) button.classList.add("wrong");
+  });
+  if (item.image) {
+    $("imageFrame").classList.remove("is-covered");
+    $("imageFrame").classList.add("is-revealed");
+  }
+
+  if (correct) {
+    state.score += 1;
+    if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-wave.png";
+    setKidHtml($("feedbackTitle"), ["やったね！", "すごい！", "いい調子！"][state.index % 3]);
+    playTone(660);
+  } else {
+    state.wrong.push(state.queue[state.index]);
+    if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-front.png";
+    setKidHtml($("feedbackTitle"), ["次はいけるよ！", "だいじょうぶ、発見できたね！"][state.index % 2]);
+    playTone(330);
+  }
+  $("scoreChip").textContent = `★ ${state.score}`;
+  $("feedbackText").innerHTML = `${kidHtml(item.explanation)}（${kidHtml(item.source)}）`;
+  $("feedback").hidden = false;
+  setTimeout(nextQuestion, 1800);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
-  .image-frame.is-revealed img { animation: none !important; }
+function nextQuestion() {
+  state.index += 1;
+  if (state.index < state.queue.length) {
+    renderQuestion();
+    saveProgress();
+  } else {
+    showResult();
+  }
 }
+
+function showResult() {
+  localStorage.removeItem(STORAGE_KEY);
+  updateResumeButton();
+  showScreen("resultScreen");
+  const total = state.queue.length;
+  const passed = !state.reviewMode && total === 25 && state.score === 25;
+  $("resultCard").classList.toggle("fail", !passed);
+  $("resultScore").textContent = state.score;
+  document.querySelector(".score-display span").innerHTML = `/ ${total}<ruby>点<rt>てん</rt></ruby>`;
+  $("resultKicker").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）`;
+  setKidHtml($("resultTitle"), passed ? "たんけんクリア！" : state.reviewMode ? "復習できたね！" : "もう一回チャレンジ！");
+  $("resultSummary").textContent = passed
+    ? "25もん すべてせいかい！ めむろちょうの たんけんめいじんです。"
+    : `${total}もんちゅう ${state.score}もんせいかい。まちがいも、あたらしいはっけんへのいっぽだよ。`;
+  $("certificate").hidden = !passed;
+  $("certificateCourse").innerHTML = `${kidHtml(levelInfo[state.level].name)} ${kidHtml(levelInfo[state.level].label)}`;
+  $("reviewButton").hidden = state.wrong.length === 0;
+  $("reviewButton").textContent = `まちがいふくしゅう（${state.wrong.length}もん）`;
+  playTone(passed ? 880 : 440);
+}
+
+function saveProgress() {
+  if (!state.level || state.reviewMode) return;
+  const saved = {
+    level: state.level, queue: state.queue, index: state.index,
+    score: state.score, wrong: state.wrong
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  updateResumeButton();
+}
+
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!saved || !levelInfo[saved.level] || saved.index >= saved.queue.length) return;
+    state = { ...state, ...saved, reviewMode: false, locked: false };
+    showScreen("quizScreen");
+    renderQuestion();
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+function updateResumeButton() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { /* 破損時は非表示 */ }
+  $("resumeArea").hidden = !saved;
+  if (saved && levelInfo[saved.level]) {
+    $("resumeButton").innerHTML = `${kidHtml(levelInfo[saved.level].name)} <ruby>第<rt>だい</rt></ruby>${saved.index + 1}<ruby>問<rt>もん</rt></ruby>から`;
+  }
+}
+
+function goHome() {
+  showScreen("topScreen");
+  updateResumeButton();
+}
+
+function confirmQuit() {
+  if (window.confirm("ここまでの きろくを のこして、トップに もどりますか？")) goHome();
+}
+
+function playTone(frequency) {
+  if (!state.sound || !window.AudioContext) return;
+  const context = new AudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.05, context.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.12);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start();
+  oscillator.stop(context.currentTime + 0.12);
+}
+
+document.querySelectorAll(".level-card").forEach((button) => {
+  button.addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    startQuiz(button.dataset.level);
+  });
+});
+$("resumeButton").addEventListener("click", loadProgress);
+$("quitButton").addEventListener("click", confirmQuit);
+$("homeButton").addEventListener("click", goHome);
+$("resultHomeButton").addEventListener("click", goHome);
+$("retryButton").addEventListener("click", () => startQuiz(state.level));
+$("reviewButton").addEventListener("click", () => startQuiz(state.level, [...new Set(state.wrong)], true));
+$("soundButton").addEventListener("click", () => {
+  state.sound = !state.sound;
+  $("soundButton").setAttribute("aria-pressed", String(state.sound));
+  $("soundButton").setAttribute("aria-label", state.sound ? "こうかおんを きる" : "こうかおんを つける");
+  $("soundButton").textContent = state.sound ? "♪" : "×";
+});
+
+updateResumeButton();
+applyKidText();
