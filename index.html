@@ -1,41 +1,860 @@
-# 画像の出典
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#71b957">
+  <title>まちるだいすけと めむろたんけん</title>
+  <style>
+:root {
+  --grass: #70b957;
+  --grass-dark: #367b3f;
+  --cream: #fff8df;
+  --sky: #8dd8ee;
+  --corn: #ffd84d;
+  --ink: #263d3b;
+  --white: #fff;
+  --red: #e96957;
+  --shadow: 0 6px 0 rgba(39, 83, 61, .16);
+}
 
-## トップ画面のキャラクター
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
-- `machiru-front.png` / `machiru-wave.png`
-- 利用者提供画像「名称未設定のデザイン.PNG」をもとに、トップ画面用に背景を切り抜いて作成
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    linear-gradient(105deg, transparent 0 48%, rgba(107,172,78,.07) 48% 52%, transparent 52% 100%),
+    linear-gradient(#dff6ff 0 34%, #f9f3d4 34% 100%);
+  font-family: "Hiragino Maru Gothic ProN", "HG丸ｺﾞｼｯｸM-PRO", "UD Digi Kyokasho NK-R", Meiryo, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
 
-- `machiru-daisuke.png`
-- JAめむろ「のうきょう通信 第20号」（2026年3月30日発行）掲載の公式キャラクター「まちるだいすけ」
-- 出典：https://www.ja-memuro.or.jp/cms/wp-content/uploads/2026/03/%E3%81%AE%E3%81%86%E3%81%8D%E3%82%87%E3%81%86%E9%80%9A%E4%BF%A1_%E7%AC%AC20%E5%8F%B7.pdf
+body::after {
+  content: "・  ・    ・  ・  ・    ・";
+  position: fixed;
+  inset: auto 0 0;
+  height: 38px;
+  color: rgba(47,116,61,.25);
+  letter-spacing: 34px;
+  transform: rotate(-3deg);
+  pointer-events: none;
+}
+.sky {
+  position: fixed;
+  inset: 56px 0 auto;
+  height: 150px;
+  z-index: -1;
+  opacity: .16;
+  background: linear-gradient(145deg, transparent 0 43%, #4b8d71 44% 55%, transparent 56%) 0 0 / 240px 150px repeat-x;
+  clip-path: polygon(0 75%, 9% 42%, 17% 67%, 27% 25%, 39% 72%, 50% 35%, 63% 70%, 75% 18%, 87% 62%, 100% 35%, 100% 100%, 0 100%);
+}
 
-## クイズ内の写真・図
+button { font: inherit; color: inherit; }
+button:focus-visible, a:focus-visible { outline: 4px solid #1667c1; outline-offset: 3px; }
+.skip-link { position: fixed; left: 8px; top: -60px; z-index: 99; background: #fff; padding: 10px; }
+.skip-link:focus { top: 8px; }
 
-クイズ内の写真・図は、芽室町公式サイトで公開されている次の副読本から、問題表示に必要な部分を切り出して使用しています。
+.app-header {
+  height: 64px;
+  max-width: 1120px;
+  margin: auto;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand { display: flex; gap: 8px; align-items: center; border: 0; background: transparent; text-align: left; cursor: pointer; line-height: 1.05; }
+.brand strong { color: var(--grass-dark); font-size: 1.05rem; }
+.brand-mark { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; background: #fff; border: 2px solid var(--corn); border-radius: 50%; box-shadow: 0 4px 0 #d9aa25; }
+.brand-mark img { width: 115%; height: 115%; object-fit: contain; }
+.icon-button { width: 42px; height: 42px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 4px 0 rgba(53,91,74,.17); cursor: pointer; }
 
-- 小学校社会科3・4年生 地域学習書「めむろ学」
-- 公開元：北海道芽室町
-- 閲覧ページ：https://www.memuro.net/fukudoku/
-- 取得・加工日：2026年6月27日
+main { min-height: calc(100vh - 64px); display: grid; place-items: center; padding: 8px 18px 18px; }
+.screen { width: min(1080px, 100%); }
+.top-screen { align-self: start; }
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  overflow: hidden;
+  text-align: center;
+  margin: 4px auto 14px;
+  padding: 14px 28px 18px;
+  border: 4px solid #fff;
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.06), rgba(20,67,47,.24)),
+    url("images/memuro-aerial.jpg") center 45% / cover no-repeat;
+}
+.hero::after {
+  content: none;
+}
+.hero-center {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  width: fit-content;
+  max-width: 92%;
+  padding: 15px clamp(22px, 4vw, 42px);
+  border: 1px solid rgba(255,255,255,.82);
+  border-radius: 22px;
+  text-align: left;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,.18) 0%,
+    rgba(255,255,255,.58) 23%,
+    rgba(255,255,255,.66) 50%,
+    rgba(255,255,255,.58) 77%,
+    rgba(255,255,255,.18) 100%
+  );
+  box-shadow: 0 14px 34px rgba(24,52,43,.22);
+  -webkit-backdrop-filter: blur(12px) saturate(1.12);
+  backdrop-filter: blur(12px) saturate(1.12);
+}
+.hero-mascot {
+  width: 116px;
+  height: 116px;
+  object-fit: contain;
+  margin-right: clamp(14px, 3vw, 30px);
+  filter: drop-shadow(0 7px 7px rgba(28,64,48,.22));
+}
+.eyebrow { margin: 0 0 4px; color: var(--grass-dark); font-size: .92rem; letter-spacing: .1em; }
+h1 { margin: 0; line-height: 1.17; font-size: clamp(1.55rem, 4vw, 2.55rem); }
+h1 span { color: inherit; }
+.hero h1 {
+  display: grid;
+  gap: 2px;
+  max-width: 760px;
+  color: #245f3b;
+  font-family: "Hiragino Maru Gothic ProN", "HG丸ｺﾞｼｯｸM-PRO", "UD Digi Kyokasho NK-R", Meiryo, sans-serif;
+  font-size: clamp(2rem, 4.4vw, 3.05rem);
+  line-height: 1.02;
+  text-shadow: 0 1px 10px rgba(255,255,255,.92);
+  font-feature-settings: "palt";
+}
+.hero-title-place {
+  font-size: .54em;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: #397250;
+}
+.hero-title-main {
+  font-size: 1em;
+  font-weight: 800;
+  letter-spacing: .035em;
+  white-space: nowrap;
+}
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 4px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--corn), #f2b52f);
+}
 
-| 画像ファイル | 副読本の掲載ページ | 内容 |
-|---|---:|---|
-| memuro-aerial.jpg / fields.jpg | p.12 | 芽室町の航空写真 |
-| memuro-map.jpg | p.13 | 芽室町の位置 |
-| corn.jpg / sugar-beet.jpg / wheat.jpg | p.26 | とうもろこし畑・ビート畑・小麦 |
-| potato.jpg / harvester.jpg | p.28 | じゃがいも畑・ハーベスター |
-| tractor.jpg | p.30 | じゃがいもづくりの農業機械 |
-| food-factory.jpg | p.32 | 農産物加工施設 |
-| supermarket.jpg | p.40 | 店で売られる食品 |
-| fire-engine.jpg / fire-station.jpg | p.51 | 消火訓練・芽室消防署 |
-| drill.jpg | p.52 | 消防署の訓練 |
-| old-station.jpg | p.72 | 開業したころの芽室駅 |
-| water-plant.jpg | p.99 | 水道施設と浄水の仕組み |
-| waste-center.jpg | p.108 | くりりんセンターの仕組み |
-| gateball.jpg | p.143 | ゲートボール少年団 |
-| historic-photo.jpg | p.149 | アイヌ文化を伝える歴史資料 |
-| ainu-culture.jpg | p.155 | アイヌ文化の体験学習 |
+.level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.level-card {
+  position: relative;
+  min-height: 178px;
+  padding: 23px 16px 16px;
+  border: 3px solid rgba(255,255,255,.75);
+  border-radius: 27px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .15s, box-shadow .15s;
+}
+.level-icon { font-size: 2.2rem; filter: drop-shadow(0 3px 0 rgba(255,255,255,.65)); }
+.level-card:hover { transform: translateY(-4px); box-shadow: 0 10px 0 rgba(39,83,61,.14); }
+.level-card:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(39,83,61,.18); }
+.beginner { background: #c9ed9d; }
+.intermediate { background: #b8e8f4; }
+.advanced { background: #ffe47a; }
+.level-stamp { position: absolute; top: -12px; left: 16px; width: 45px; height: 45px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: var(--grass-dark); font-size: 1.25rem; border: 3px dashed currentColor; transform: rotate(-8deg); }
+.level-name { margin-top: 10px; font-size: clamp(1.3rem, 2.35vw, 1.68rem); line-height: 1.18; }
+.level-sub { min-height: 1.5em; font-size: 1.08rem; margin: 5px 0 12px; }
+.level-meta { margin-top: auto; padding: 8px 18px; background: rgba(255,255,255,.77); border-radius: 999px; font-size: .95rem; }
+.resume-area { text-align: center; margin: -5px 0 10px; }
+.resume-button { border: 0; border-radius: 999px; padding: 9px 22px; background: #fff; color: var(--grass-dark); box-shadow: 0 4px 0 rgba(39,83,61,.14); cursor: pointer; }
 
-`placeholder.jpg` は、写真がまだ用意されていない問題の共通画像として制作したオリジナル画像です。
+.quiz-screen { max-width: 900px; }
+.progress-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 5px; }
+.progress-row p { margin: 0; }
+#questionCounter { font-size: 1.18rem; }
+#scoreChip { justify-self: end; background: var(--corn); border-radius: 999px; padding: 5px 13px; }
+.back-button { justify-self: start; border: 0; background: transparent; cursor: pointer; }
+.progress-track { height: 9px; overflow: hidden; background: rgba(255,255,255,.8); border-radius: 999px; margin-bottom: 9px; }
+#progressBar { height: 100%; width: 4%; background: linear-gradient(90deg, var(--grass), #a6d55e); border-radius: inherit; transition: width .3s; }
+.question-card { background: rgba(255,255,255,.94); border: 4px solid #fff; border-radius: 27px; padding: clamp(12px, 2vw, 20px); box-shadow: var(--shadow); }
+.question-main { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px; align-items: center; min-height: 155px; }
+.course-label { display: inline-block; margin: 0 0 8px; padding: 5px 11px; color: var(--grass-dark); background: #e1f4ce; border-radius: 999px; font-size: .9rem; }
+#questionText { margin: 0; font-size: clamp(1.55rem, 3.5vw, 2.25rem); line-height: 1.5; }
+.image-frame { margin: 0; height: 155px; overflow: hidden; border-radius: 19px; background: #edf4e7; border: 3px solid #e4eecf; }
+.image-frame img { width: 100%; height: 100%; object-fit: cover; transition: filter .45s ease, opacity .45s ease, transform .45s ease; }
+.image-frame figcaption { position: absolute; right: 6px; bottom: 5px; padding: 3px 7px; color: #fff; background: rgba(24,55,42,.78); border-radius: 999px; font-size: .58rem; }
+.image-frame { position: relative; }
+.image-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  text-align: center;
+  color: var(--grass-dark);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.85) 0 4px, transparent 5px),
+    linear-gradient(145deg, #fff8c8, #dff1c9);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.image-curtain span { font-size: 2rem; }
+.image-curtain strong { font-size: .82rem; line-height: 1.35; }
+.image-frame.is-covered img { filter: blur(12px); opacity: .22; transform: scale(1.08); }
+.image-frame.is-covered figcaption { opacity: 0; }
+.image-frame.is-revealed img { animation: photoReveal .48s ease both; }
+.image-frame.is-revealed .image-curtain { opacity: 0; transform: scale(.9); pointer-events: none; }
+@keyframes photoReveal {
+  from { opacity: .2; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+.question-main.no-image { grid-template-columns: 1fr; min-height: 115px; text-align: center; }
+.choice-list { display: grid; gap: 9px; margin-top: 12px; }
+.choice-button {
+  width: 100%;
+  min-height: 60px;
+  border: 2px solid #dbe8d2;
+  border-radius: 17px;
+  background: #f9fff5;
+  box-shadow: 0 4px 0 #d7e3d0;
+  cursor: pointer;
+  text-align: left;
+  padding: 10px 17px;
+  font-size: 1.12rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform .1s;
+}
+.choice-button { -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) and (pointer: fine) {
+  .choice-button:hover { background: #fff6c6; transform: translateY(-1px); }
+}
+.choice-button:active { transform: translateY(3px); box-shadow: 0 1px 0 #d7e3d0; }
+.choice-button:disabled { cursor: default; }
+.choice-letter { flex: 0 0 34px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--grass); }
+.choice-button.correct { background: #dff4d1; border-color: var(--grass); }
+.choice-button.wrong { background: #ffe6dd; border-color: var(--red); }
+.feedback { margin: 10px auto 0; max-width: 720px; padding: 8px 16px; border-radius: 18px; background: #fff7c9; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 0 rgba(91,79,35,.13); }
+.feedback-mascot {
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 0 rgba(39,83,61,.13));
+}
+.feedback strong { color: var(--grass-dark); }
+.feedback p { margin: 2px 0 0; font-size: .98rem; font-weight: 600; line-height: 1.5; }
+.feedback strong { font-size: 1.08rem; }
 
-公開・再配布時は、芽室町および副読本に掲載された画像提供者の利用条件を確認してください。
+.result-screen { max-width: 680px; text-align: center; }
+.result-card { background: rgba(255,255,255,.95); border: 5px solid var(--corn); border-radius: 30px; padding: 22px; box-shadow: var(--shadow); }
+.result-card.fail { border-color: var(--sky); }
+.result-seal { width: 75px; height: 75px; display: grid; place-items: center; margin: -4px auto 5px; border: 4px dashed var(--grass); border-radius: 50%; font-size: 2.7rem; }
+.result-card h2 { margin: 4px 0; font-size: clamp(1.7rem, 5vw, 2.65rem); color: var(--grass-dark); }
+.score-display { display: flex; justify-content: center; align-items: baseline; gap: 7px; }
+.score-display strong { font-size: 4rem; line-height: 1; color: #e09b00; }
+#resultSummary { margin: 8px 0; }
+.certificate { max-width: 470px; margin: 12px auto; padding: 11px; border: 5px double #d6a81d; background: #fffdf1; display: grid; gap: 5px; }
+.certificate p { margin: 0; letter-spacing: .25em; }
+.certificate strong { font-size: 1.2rem; }
+.certificate span { font-size: .8rem; font-weight: 600; }
+.result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 14px; }
+.primary-button, .secondary-button { min-height: 45px; border-radius: 14px; padding: 9px 18px; cursor: pointer; }
+.primary-button { border: 0; color: #fff; background: var(--grass-dark); box-shadow: 0 4px 0 #225329; }
+.secondary-button { border: 2px solid #bdd0b7; background: #fff; }
+
+footer { min-height: 30px; text-align: center; font-size: .72rem; color: #58705e; }
+ruby { ruby-align: center; }
+rt { font-size: .5em; font-weight: 700; color: #315f44; }
+
+@media (max-width: 700px) {
+  .app-header { height: 56px; padding: 6px 12px; }
+  main { min-height: calc(100vh - 80px); padding: 5px 10px 12px; }
+  .brand { font-size: .75rem; }
+  .brand-mark, .icon-button { width: 37px; height: 37px; }
+  .hero { margin-bottom: 10px; min-height: 205px; padding: 10px 16px 15px; }
+  .hero-center { width: fit-content; max-width: 92%; padding: 12px 22px; }
+  .hero-mascot { width: 96px; height: 96px; }
+  .hero h1 { font-size: clamp(1.9rem, 6.5vw, 2.65rem); }
+  .level-grid { gap: 8px; }
+  .level-card { min-height: 145px; padding: 20px 7px 10px; border-radius: 20px; }
+  .level-icon { font-size: 1.75rem; }
+  .level-stamp { width: 36px; height: 36px; top: -7px; }
+  .level-sub { font-size: .9rem; }
+  .level-meta { font-size: .78rem; }
+  .question-main { min-height: 120px; grid-template-columns: 1.3fr .7fr; gap: 9px; }
+  .image-frame { height: 120px; border-radius: 13px; }
+  .choice-list { gap: 7px; margin-top: 8px; }
+  .choice-button { min-height: 54px; padding: 7px 11px; font-size: 1rem; }
+  .feedback { margin-top: 7px; padding: 6px 10px; }
+}
+
+@media (max-width: 470px) {
+  .hero { min-height: 175px; padding: 7px 10px 12px; }
+  .hero-center { width: 94%; padding: 10px 14px; border-radius: 17px; }
+  .hero-mascot { width: 74px; height: 74px; margin-right: 10px; }
+  .hero h1 { font-size: clamp(1.48rem, 7vw, 1.75rem); line-height: 1.06; letter-spacing: .02em; }
+  .hero h1::after { width: 48px; height: 4px; margin-top: 7px; }
+  .level-grid { grid-template-columns: 1fr; }
+  .level-card { min-height: 92px; padding: 12px 12px 10px 60px; align-items: flex-start; justify-content: center; }
+  .level-icon { position: absolute; left: 16px; bottom: 12px; font-size: 1.65rem; }
+  .level-stamp { left: 12px; top: 25px; }
+  .level-name { margin-top: 0; font-size: 1.22rem; }
+  .level-sub { margin: 2px 0 4px; }
+  .level-meta { position: absolute; right: 9px; bottom: 9px; padding: 5px 9px; }
+  .question-main { grid-template-columns: 1fr; min-height: auto; text-align: center; }
+  .image-frame { height: 105px; }
+  #questionText { min-height: 58px; }
+  .feedback p { display: none; }
+}
+
+@media (max-height: 650px) and (min-width: 600px) {
+  .app-header { height: 50px; }
+  main { min-height: calc(100vh - 70px); padding-top: 2px; }
+  .hero { margin: 0 auto 8px; }
+  .hero { min-height: 180px; }
+  .hero-mascot { width: 88px; height: 88px; }
+  .hero h1 { font-size: 2rem; }
+  .level-card { min-height: 130px; }
+  .question-main { min-height: 110px; }
+  .image-frame { height: 110px; }
+  .choice-button { min-height: 50px; font-size: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+  .image-frame.is-revealed img { animation: none !important; }
+}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">メインへ いどう</a>
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <button id="homeButton" class="brand" type="button" aria-label="トップに もどる">
+      <span class="brand-mark"><img src="images/machiru-front.png" alt=""></span>
+      <span>まちるだいすけと<br><strong>めむろたんけん</strong></span>
+    </button>
+    <button id="soundButton" class="icon-button" type="button" aria-pressed="true" aria-label="こうかおんを きる">♪</button>
+  </header>
+
+  <main id="main">
+    <section id="topScreen" class="screen top-screen">
+      <div class="hero">
+        <div class="hero-center">
+          <img class="hero-mascot" src="images/machiru-wave.png" alt="手を上げる まちるだいすけ">
+          <h1>
+            <span class="hero-title-main">めむろ<ruby>検定<rt>けんてい</rt></ruby></span>
+          </h1>
+        </div>
+      </div>
+
+      <div id="resumeArea" class="resume-area" hidden>
+        <button id="resumeButton" class="resume-button" type="button">前のつづきから</button>
+      </div>
+
+      <div class="level-grid" aria-label="コースをえらぶ">
+        <button class="level-card beginner" type="button" data-level="beginner">
+          <span class="level-stamp">1</span>
+          <span class="level-icon" aria-hidden="true">🗺️</span>
+          <span class="level-name">まちたんけん</span>
+          <span class="level-sub">ビギナー級</span>
+          <span class="level-meta">全25問　▶</span>
+        </button>
+        <button class="level-card intermediate" type="button" data-level="intermediate">
+          <span class="level-stamp">2</span>
+          <span class="level-icon" aria-hidden="true">🚜</span>
+          <span class="level-name">くらし・しごとたんけん</span>
+          <span class="level-sub">中級</span>
+          <span class="level-meta">全25問　▶</span>
+        </button>
+        <button class="level-card advanced" type="button" data-level="advanced">
+          <span class="level-stamp">3</span>
+          <span class="level-icon" aria-hidden="true">🏑</span>
+          <span class="level-name">れきし・文化たんけん</span>
+          <span class="level-sub">上級</span>
+          <span class="level-meta">全25問　▶</span>
+        </button>
+      </div>
+
+    </section>
+
+    <section id="quizScreen" class="screen quiz-screen" hidden>
+      <div class="progress-row">
+        <button id="quitButton" class="back-button" type="button">‹ やめる</button>
+        <p id="questionCounter" aria-live="polite">第1問 / 25問</p>
+        <p id="scoreChip">★ 0</p>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="クイズの進み具合" aria-valuemin="0" aria-valuemax="25" aria-valuenow="1">
+        <div id="progressBar"></div>
+      </div>
+
+      <article class="question-card">
+        <div class="question-main">
+          <div>
+            <p id="levelLabel" class="course-label"></p>
+            <h2 id="questionText"></h2>
+          </div>
+          <figure id="imageFrame" class="image-frame">
+            <img id="questionImage" alt="">
+            <figcaption id="imageCredit">写真：地域学習書「めむろ学」</figcaption>
+            <div id="imageCurtain" class="image-curtain" aria-hidden="true">
+              <span>🔍</span>
+              <strong>こたえの あとで<br>しゃしんが ひらくよ</strong>
+            </div>
+          </figure>
+        </div>
+        <div id="choiceList" class="choice-list" role="group" aria-label="答えをえらぶ"></div>
+      </article>
+
+      <div id="feedback" class="feedback" role="status" aria-live="assertive" hidden>
+        <img id="feedbackMascot" class="feedback-mascot" src="images/machiru-wave.png" alt="">
+        <div>
+          <strong id="feedbackTitle"></strong>
+          <p id="feedbackText"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" hidden>
+      <div id="resultCard" class="result-card">
+        <div id="resultSeal" class="result-seal" aria-hidden="true">🌽</div>
+        <p id="resultKicker" class="eyebrow"></p>
+        <h2 id="resultTitle"></h2>
+        <div class="score-display"><strong id="resultScore">0</strong><span>/ 25点</span></div>
+        <p id="resultSummary"></p>
+        <div id="certificate" class="certificate" hidden>
+          <p>認 定 証</p>
+          <strong id="certificateCourse"></strong>
+          <span>芽室町のことをよく学び、全問正解したことを認定します。</span>
+        </div>
+        <div class="result-actions">
+          <button id="retryButton" class="primary-button" type="button">もう一度挑戦</button>
+          <button id="reviewButton" class="secondary-button" type="button">まちがい復習</button>
+          <button id="resultHomeButton" class="secondary-button" type="button">トップに戻る</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+"use strict";
+
+// 3年生までの漢字だけを残し、残した漢字には読みがなを付けた表示データ。
+const kidTextMap = Object.freeze({"/ 25点":"/ 25<ruby>点<rt>てん</rt></ruby>","110番につながるのは？":"110<ruby>番<rt>ばん</rt></ruby>につながるのは？","119番につながるのは？":"119<ruby>番<rt>ばん</rt></ruby>につながるのは？","1600年":"1600<ruby>年<rt>ねん</rt></ruby>","1800年":"1800<ruby>年<rt>ねん</rt></ruby>","1800年の十勝川調査の地図に「メモロ」と記されました。":"1800<ruby>年<rt>ねん</rt></ruby>の<ruby>十勝川<rt>とかちがわ</rt></ruby>ちょうさの<ruby>地図<rt>ちず</rt></ruby>に「メモロ」と<ruby>記さ<rt>しるさ</rt></ruby>れました。","1807年":"1807<ruby>年<rt>ねん</rt></ruby>","1858年":"1858<ruby>年<rt>ねん</rt></ruby>","1900年":"1900<ruby>年<rt>ねん</rt></ruby>","1900年に戸長役場が置かれ、行政の中心となりました。":"1900<ruby>年<rt>ねん</rt></ruby>に<ruby>戸長<rt>こちょう</rt></ruby><ruby>役場<rt>やくば</rt></ruby>がおかれ、ぎょうせいの<ruby>中心<rt>ちゅうしん</rt></ruby>となりました。","1906年":"1906<ruby>年<rt>ねん</rt></ruby>","1907年":"1907<ruby>年<rt>ねん</rt></ruby>","1942年":"1942<ruby>年<rt>ねん</rt></ruby>","1942年に町制が施行され、芽室町になりました。":"1942<ruby>年<rt>ねん</rt></ruby>にちょうせいがしこうされ、めむろ<ruby>町<rt>まち</rt></ruby>になりました。","1945年":"1945<ruby>年<rt>ねん</rt></ruby>","1958年":"1958<ruby>年<rt>ねん</rt></ruby>","1992年":"1992<ruby>年<rt>ねん</rt></ruby>","2000年":"2000<ruby>年<rt>ねん</rt></ruby>","2007年":"2007<ruby>年<rt>ねん</rt></ruby>","2008年":"2008<ruby>年<rt>ねん</rt></ruby>","2020年":"2020<ruby>年<rt>ねん</rt></ruby>","25もん すべてせいかい！ めむろちょうの たんけんめいじんです。":"25もん すべてせいかい！ めむろちょうの たんけんめいじんです。","JAは農家の仕事や農産物の流通を支えます。":"JAは<ruby>農家<rt>のうか</rt></ruby>の<ruby>仕事<rt>しごと</rt></ruby>やのうさんぶつの<ruby>流通<rt>りゅうつう</rt></ruby>をささえます。","JR根室本線の芽室駅があります。写真は開業したころの芽室駅です。":"JR<ruby>根室<rt>ねむろ</rt></ruby><ruby>本線<rt>ほんせん</rt></ruby>のめむろ<ruby>駅<rt>えき</rt></ruby>があります。<ruby>写真<rt>しゃしん</rt></ruby>は<ruby>開業<rt>かいぎょう</rt></ruby>したころのめむろ<ruby>駅<rt>えき</rt></ruby>です。","Reduceは、ごみを減らす工夫です。":"Reduceは、ごみをへらすくふうです。","Refuseは、不要な物をことわることです。":"Refuseは、ふような<ruby>物<rt>もの</rt></ruby>をことわることです。","‹ やめる":"‹ やめる","⛰ 日高山脈":"⛰ <ruby>日高<rt>ひだか</rt></ruby>さんみゃく","「メム・オロ」に近い意味は？":"「メム・オロ」に<ruby>近い<rt>ちかい</rt></ruby><ruby>意味<rt>いみ</rt></ruby>は？","「芽室」の名のもとになったアイヌ語は？":"「めむろ」の<ruby>名<rt>めい</rt></ruby>のもとになったアイヌ<ruby>語<rt>ご</rt></ruby>は？","いい調子！":"いい<ruby>調子<rt>ちょうし</rt></ruby>！","いつ起きるか分からない火事や救急に備えます。":"いつ<ruby>起き<rt>おき</rt></ruby>るか<ruby>分か<rt>わか</rt></ruby>らない<ruby>火事<rt>かじ</rt></ruby>やきゅうきゅうにそなえます。","いろいろな人の意見を聞く":"いろいろな<ruby>人<rt>にん</rt></ruby>の<ruby>意見<rt>いけん</rt></ruby>を<ruby>聞く<rt>きく</rt></ruby>","うわさだけ":"うわさだけ","きみも芽室町の":"きみもめむろ<ruby>町<rt>まち</rt></ruby>の","きれいにした水が水道管で家や学校へ届きます。":"きれいにした<ruby>水<rt>みず</rt></ruby>がすいどうかんで<ruby>家<rt>いえ</rt></ruby>や<ruby>学校<rt>がっこう</rt></ruby>へとどきます。","くらしを良くする話し合いに大切なのは？":"くらしをよくする<ruby>話し合い<rt>はなしあい</rt></ruby>に<ruby>大切<rt>たいせつ</rt></ruby>なのは？","くらし・しごと":"くらし・しごと","くらし・しごとたんけん":"くらし・しごとたんけん","くりりんセンターで燃やすごみの熱は？":"くりりんセンターでもやすごみのねつは？","こうかおんを きる":"こうかおんを きる","こうかおんを つける":"こうかおんを つける","ここまでの きろくを のこして、トップに もどりますか？":"ここまでの きろくを のこして、トップに もどりますか？","ごみそのものを減らす4Rは？":"ごみそのものをへらす4Rは？","ごみになる物を受け取らない4Rは？":"ごみになる<ruby>物<rt>もの</rt></ruby>を<ruby>受け取ら<rt>うけとら</rt></ruby>ない4Rは？","ごみを決められた日に出すのはなぜ？":"ごみを<ruby>決め<rt>きめ</rt></ruby>られた<ruby>日<rt>にち</rt></ruby>に<ruby>出す<rt>だす</rt></ruby>のはなぜ？","ごみを燃やした熱を利用して電気を作ります。":"ごみをもやしたねつをりようして<ruby>電気<rt>でんき</rt></ruby>を<ruby>作り<rt>つくり</rt></ruby>ます。","ごみを燃やす":"ごみをもやす","ごみ収集車":"ごみしゅうしゅうしゃ","じゃがいもの別のよび方は？":"じゃがいものべつのよび<ruby>方は<rt>かたは</rt></ruby>？","すごい！":"すごい！","そのまま捨てる":"そのまますてる","たまねぎ":"たまねぎ","たんけんクリア！":"たんけんクリア！","たんけん名人":"たんけん<ruby>名人<rt>めいじん</rt></ruby>","たんけん（上級）":"たんけん（<ruby>上級<rt>じょうきゅう</rt></ruby>）","たんけん（中級）":"たんけん（<ruby>中級<rt>ちゅうきゅう</rt></ruby>）","だいじょうぶ、発見できたね！":"だいじょうぶ、<ruby>発見<rt>はっけん</rt></ruby>できたね！","だれにも聞かない":"だれにも<ruby>聞か<rt>きか</rt></ruby>ない","てん菜":"てんな","てん菜は砂糖の大切な原料です。":"てんなはさとうの<ruby>大切<rt>たいせつ</rt></ruby>なげんりょうです。","てん菜（ビート）":"てんな（ビート）","になろう！":"になろう！","ねぶただけ":"ねぶただけ","ねんりんでは芽室の歴史やくらしを学べます。":"ねんりんではめむろのれきしやくらしを<ruby>学べ<rt>まなべ</rt></ruby>ます。","ばれいしょ":"ばれいしょ","ばれいしょは、じゃがいものことです。":"ばれいしょは、じゃがいものことです。","ふだんの練習が、いざという時の安全につながります。":"ふだんの<ruby>練習<rt>れんしゅう</rt></ruby>が、いざという<ruby>時の<rt>ときの</rt></ruby><ruby>安全<rt>あんぜん</rt></ruby>につながります。","ふるさと歴史館ねんりん":"ふるさとれきしかんねんりん","ぼくといっしょに、3つのコースをたんけんしよう！":"ぼくといっしょに、3つのコースをたんけんしよう！","まちがい復習":"まちがいふくしゅう","まちたんけん":"まちたんけん","まとめて伝えることで、文化を知る人が増えます。":"まとめてつたえることで、<ruby>文化<rt>ぶんか</rt></ruby>を<ruby>知る人<rt>しるひと</rt></ruby>がふえます。","めむろたんけん":"めむろたんけん","めむろちょうの はたけと ひだかさんみゃくの イメージ（しゃしん じゅんびちゅう）":"めむろちょうの はたけと ひだかさんみゃくの イメージ（しゃしん じゅんびちゅう）","めむろ学 p.104–117":"めむろ<ruby>学<rt>がく</rt></ruby> p.104–117","めむろ学 p.108":"めむろ<ruby>学<rt>がく</rt></ruby> p.108","めむろ学 p.115":"めむろ<ruby>学<rt>がく</rt></ruby> p.115","めむろ学 p.140–143":"めむろ<ruby>学<rt>がく</rt></ruby> p.140–143","めむろ学 p.142–159":"めむろ<ruby>学<rt>がく</rt></ruby> p.142–159","めむろ学 p.142–159・町公式「芽室町について」":"めむろ<ruby>学<rt>がく</rt></ruby> p.142–159・<ruby>町<rt>まち</rt></ruby><ruby>公式<rt>こうしき</rt></ruby>「めむろ<ruby>町<rt>まち</rt></ruby>について」","めむろ学 p.142–169":"めむろ<ruby>学<rt>がく</rt></ruby> p.142–169","めむろ学 p.148–153":"めむろ<ruby>学<rt>がく</rt></ruby> p.148–153","めむろ学 p.14–15":"めむろ<ruby>学<rt>がく</rt></ruby> p.14–15","めむろ学 p.14–17":"めむろ<ruby>学<rt>がく</rt></ruby> p.14–17","めむろ学 p.14–23":"めむろ<ruby>学<rt>がく</rt></ruby> p.14–23","めむろ学 p.160–169・町公式「町の紹介」":"めむろ<ruby>学<rt>がく</rt></ruby> p.160–169・<ruby>町<rt>まち</rt></ruby><ruby>公式<rt>こうしき</rt></ruby>「<ruby>町<rt>まち</rt></ruby>のしょうかい」","めむろ学 p.160–177":"めむろ<ruby>学<rt>がく</rt></ruby> p.160–177","めむろ学 p.16–19":"めむろ<ruby>学<rt>がく</rt></ruby> p.16–19","めむろ学 p.16・町公式「農業の概要」":"めむろ<ruby>学<rt>がく</rt></ruby> p.16・<ruby>町<rt>まち</rt></ruby><ruby>公式<rt>こうしき</rt></ruby>「<ruby>農業<rt>のうぎょう</rt></ruby>のがいよう」","めむろ学 p.178–191":"めむろ<ruby>学<rt>がく</rt></ruby> p.178–191","めむろ学 p.188–191":"めむろ<ruby>学<rt>がく</rt></ruby> p.188–191","めむろ学 p.20–23":"めむろ<ruby>学<rt>がく</rt></ruby> p.20–23","めむろ学 p.24–25":"めむろ<ruby>学<rt>がく</rt></ruby> p.24–25","めむろ学 p.26–31":"めむろ<ruby>学<rt>がく</rt></ruby> p.26–31","めむろ学 p.26–35":"めむろ<ruby>学<rt>がく</rt></ruby> p.26–35","めむろ学 p.26–37":"めむろ<ruby>学<rt>がく</rt></ruby> p.26–37","めむろ学 p.26–49":"めむろ<ruby>学<rt>がく</rt></ruby> p.26–49","めむろ学 p.30–37":"めむろ<ruby>学<rt>がく</rt></ruby> p.30–37","めむろ学 p.34–39":"めむろ<ruby>学<rt>がく</rt></ruby> p.34–39","めむろ学 p.40–49":"めむろ<ruby>学<rt>がく</rt></ruby> p.40–49","めむろ学 p.50–59":"めむろ<ruby>学<rt>がく</rt></ruby> p.50–59","めむろ学 p.50–69":"めむろ<ruby>学<rt>がく</rt></ruby> p.50–69","めむろ学 p.58–61":"めむろ<ruby>学<rt>がく</rt></ruby> p.58–61","めむろ学 p.62–69":"めむろ<ruby>学<rt>がく</rt></ruby> p.62–69","めむろ学 p.70–77":"めむろ<ruby>学<rt>がく</rt></ruby> p.70–77","めむろ学 p.70–77・p.160–177":"めむろ<ruby>学<rt>がく</rt></ruby> p.70–77・p.160–177","めむろ学 p.72":"めむろ<ruby>学<rt>がく</rt></ruby> p.72","めむろ学 p.78–89":"めむろ<ruby>学<rt>がく</rt></ruby> p.78–89","めむろ学 p.90–103":"めむろ<ruby>学<rt>がく</rt></ruby> p.90–103","めむろ学 p.90–99":"めむろ<ruby>学<rt>がく</rt></ruby> p.90–99","めむろ学 p.99":"めむろ<ruby>学<rt>がく</rt></ruby> p.99","めむろ学 p.99・町の歴史資料":"めむろ<ruby>学<rt>がく</rt></ruby> p.99・<ruby>町<rt>まち</rt></ruby>のれきししりょう","めむろ学 学び方コーナー":"めむろ<ruby>学<rt>がく</rt></ruby> <ruby>学び<rt>まなび</rt></ruby><ruby>方<rt>ほう</rt></ruby>コーナー","もう一回チャレンジ！":"もう<ruby>一回<rt>いっかい</rt></ruby>チャレンジ！","もう一度挑戦":"もう<ruby>一度<rt>いちど</rt></ruby>ちょうせん","もんだいの てがかりになる しゃしん":"もんだいの てがかりになる しゃしん","やったね！":"やったね！","れきし・文化":"れきし・<ruby>文化<rt>ぶんか</rt></ruby>","れきし・文化たんけん":"れきし・<ruby>文化<rt>ぶんか</rt></ruby>たんけん","アイヌの人々":"アイヌの<ruby>人々<rt>ひとびと</rt></ruby>","アイヌの人々が大切にしてきたものは？":"アイヌの<ruby>人々<rt>ひとびと</rt></ruby>が<ruby>大切<rt>たいせつ</rt></ruby>にしてきたものは？","アイヌの人々は長く北海道で文化を築いてきました。":"アイヌの<ruby>人々<rt>ひとびと</rt></ruby>は<ruby>長く<rt>ながく</rt></ruby><ruby>北海道<rt>ほっかいどう</rt></ruby>で<ruby>文化<rt>ぶんか</rt></ruby>をきづいてきました。","アイヌ文化を学ぶとき大切な姿勢は？":"アイヌ<ruby>文化<rt>ぶんか</rt></ruby>を<ruby>学ぶ<rt>まなぶ</rt></ruby>とき<ruby>大切<rt>たいせつ</rt></ruby>なしせいは？","アイヌ民族":"アイヌみんぞく","アイヌ民族は独自の言語や文化を育んできました。":"アイヌみんぞくはどくじの<ruby>言語<rt>げんご</rt></ruby>や<ruby>文化<rt>ぶんか</rt></ruby>を<ruby>育<rt>いく</rt></ruby>んできました。","アイヌ語で神を表す言葉は？":"アイヌ<ruby>語<rt>ご</rt></ruby>で<ruby>神<rt>かみ</rt></ruby>を<ruby>表す<rt>あらわす</rt></ruby><ruby>言葉<rt>ことば</rt></ruby>は？","アイヌ語で集落を表す言葉は？":"アイヌ<ruby>語<rt>ご</rt></ruby>で<ruby>集落<rt>しゅうらく</rt></ruby>を<ruby>表す<rt>あらわす</rt></ruby><ruby>言葉<rt>ことば</rt></ruby>は？","イオマンテ":"イオマンテ","カムイ":"カムイ","カムイは神や、人の力をこえた存在を表します。":"カムイは<ruby>神<rt>かみ</rt></ruby>や、<ruby>人<rt>にん</rt></ruby>の<ruby>力<rt>ちから</rt></ruby>をこえたそんざいを<ruby>表し<rt>あらわし</rt></ruby>ます。","ガラス":"ガラス","ゲート":"ゲート","ゲートボール":"ゲートボール","ゲートボールが考案されたのは、いつごろ？":"ゲートボールがこうあんされたのは、いつごろ？","ゲートボールでボールを通すものは？":"ゲートボールでボールを<ruby>通す<rt>とうす</rt></ruby>ものは？","ゲートボールは主にどんな競技？":"ゲートボールは<ruby>主に<rt>おもに</rt></ruby>どんなきょうぎ？","ゲートボールは芽室町が発祥の地です。":"ゲートボールはめむろ<ruby>町<rt>まち</rt></ruby>がはっしょうの<ruby>地<rt>ち</rt></ruby>です。","コタン":"コタン","コタンは人々がくらす集落です。":"コタンは<ruby>人々<rt>ひとびと</rt></ruby>がくらす<ruby>集落<rt>しゅうらく</rt></ruby>です。","ゴールネット":"ゴールネット","サッ・ポロ":"サッ・ポロ","サーミ民族":"サーミみんぞく","スイートコーン":"スイートコーン","スイートコーンは芽室町を代表する作物の一つです。":"スイートコーンはめむろ<ruby>町<rt>まち</rt></ruby>を<ruby>代表<rt>だいひょう</rt></ruby>する<ruby>作物<rt>さくもつ</rt></ruby>の<ruby>一つ<rt>ひとつ</rt></ruby>です。","スティックで打ち、決められたゲートを通します。":"スティックで<ruby>打ち<rt>うち</rt></ruby>、<ruby>決め<rt>きめ</rt></ruby>られたゲートを<ruby>通し<rt>とうし</rt></ruby>ます。","チームで協力する競技":"チームできょうりょくするきょうぎ","トカプチだけ":"トカプチだけ","トップに戻る":"トップにもどる","トラクター":"トラクター","トラック":"トラック","バス":"バス","バスケット":"バスケット","バナナ":"バナナ","パイナップル":"パイナップル","パンやめんの材料になる作物は？":"パンやめんのざいりょうになる<ruby>作物<rt>さくもつ</rt></ruby>は？","ビギナー級":"ビギナー<ruby>級<rt>きゅう</rt></ruby>","ビート":"ビート","ビートから作られるものは？":"ビートから<ruby>作ら<rt>つくら</rt></ruby>れるものは？","マオリ民族":"マオリみんぞく","メインへ いどう":"メインへ いどう","メムオロ太鼓":"メムオロたいこ","メムオロ太鼓は地域で受けつがれる郷土芸能です。":"メムオロたいこはちいきで<ruby>受け<rt>うけ</rt></ruby>つがれるきょうどげいのうです。","メムロくんと":"メムロくんと","メムロくんと めむろたんけん":"メムロくんと めむろたんけん","メム・オロ":"メム・オロ","メム・オロが転じて「芽室」になったとされます。":"メム・オロが<ruby>転じ<rt>てんじ</rt></ruby>て「めむろ」になったとされます。","モシリ":"モシリ","ラグビー":"ラグビー","リサイクル":"リサイクル","リセット":"リセット","リデュース":"リデュース","リフューズ":"リフューズ","リユース":"リユース","リユースは、物をくり返し使うことです。":"リユースは、<ruby>物<rt>もの</rt></ruby>をくり<ruby>返し<rt>かえし</rt></ruby><ruby>使う<rt>つかう</rt></ruby>ことです。","リレー":"リレー","ロボットだけ":"ロボットだけ","一つだけ見る":"<ruby>一つ<rt>ひとつ</rt></ruby>だけ<ruby>見る<rt>みる</rt></ruby>","一人だけで決める":"<ruby>一人<rt>ひとり</rt></ruby>だけで<ruby>決め<rt>きめ</rt></ruby>る","一人だけの水泳":"<ruby>一人<rt>ひとり</rt></ruby>だけの<ruby>水泳<rt>すいえい</rt></ruby>","一年中暑い":"<ruby>一年中<rt>いちねんじゅう</rt></ruby><ruby>暑い<rt>あつい</rt></ruby>","一年中雨":"<ruby>一年中<rt>いちねんじゅう</rt></ruby><ruby>雨<rt>あめ</rt></ruby>","上水道が芽室町にできた年は？":"<ruby>上水道<rt>じょうすいどう</rt></ruby>がめむろ<ruby>町<rt>まち</rt></ruby>にできた<ruby>年<rt>ねん</rt></ruby>は？","上級":"<ruby>上級<rt>じょうきゅう</rt></ruby>","中級":"<ruby>中級<rt>ちゅうきゅう</rt></ruby>","事件や事故は110番、火事や救急は119番です。":"じけんやじこは110<ruby>番<rt>ばん</rt></ruby>、<ruby>火事<rt>かじ</rt></ruby>やきゅうきゅうは119<ruby>番<rt>ばん</rt></ruby>です。","交代で勤務する":"<ruby>交代<rt>こうたい</rt></ruby>できんむする","交番":"<ruby>交番<rt>こうばん</rt></ruby>","交通はくらしや産業をつないでいます。":"<ruby>交通<rt>こうつう</rt></ruby>はくらしやさんぎょうをつないでいます。","交通ルールを守ることが安全につながります。":"<ruby>交通<rt>こうつう</rt></ruby>ルールを<ruby>守る<rt>まもる</rt></ruby>ことが<ruby>安全<rt>あんぜん</rt></ruby>につながります。","人や物が行き来しやすくなった":"<ruby>人<rt>にん</rt></ruby>や<ruby>物<rt>もの</rt></ruby>が<ruby>行き来<rt>いきき</rt></ruby>しやすくなった","人や物を運ぶため":"<ruby>人<rt>にん</rt></ruby>や<ruby>物<rt>もの</rt></ruby>を<ruby>運ぶ<rt>はこぶ</rt></ruby>ため","今も受けつがれる文化として敬意をもって学びます。":"<ruby>今<rt>いま</rt></ruby>も<ruby>受け<rt>うけ</rt></ruby>つがれる<ruby>文化<rt>ぶんか</rt></ruby>としてけいいをもって<ruby>学び<rt>まなび</rt></ruby>ます。","今日の天気だけ":"<ruby>今日<rt>きょう</rt></ruby>の<ruby>天気<rt>てんき</rt></ruby>だけ","仕事を持ちながら地域を守る人たちが活動します。":"<ruby>仕事<rt>しごと</rt></ruby>を<ruby>持ち<rt>もち</rt></ruby>ながらちいきを<ruby>守る<rt>まもる</rt></ruby><ruby>人<rt>にん</rt></ruby>たちが<ruby>活動<rt>かつどう</rt></ruby>します。","仲間と作戦を考えながら進めるチーム競技です。":"なかまとさくせんを<ruby>考え<rt>かんがえ</rt></ruby>ながら<ruby>進め<rt>すすめ</rt></ruby>るチームきょうぎです。","体験した人の話は、資料と合わせて大切な手がかりになります。":"たいけんした<ruby>人<rt>にん</rt></ruby>の<ruby>話<rt>はなし</rt></ruby>は、しりょうと<ruby>合わ<rt>あわ</rt></ruby>せて<ruby>大切<rt>たいせつ</rt></ruby>な<ruby>手がかり<rt>てがかり</rt></ruby>になります。","何も見ない":"<ruby>何も<rt>なにも</rt></ruby><ruby>見な<rt>みな</rt></ruby>い","作業や育ち方に関係するから":"<ruby>作業<rt>さぎょう</rt></ruby>や<ruby>育ち<rt>そだち</rt></ruby><ruby>方<rt>ほう</rt></ruby>にかんけいするから","作物を同じ畑で順番に変えて育てることは？":"<ruby>作物<rt>さくもつ</rt></ruby>を<ruby>同じ<rt>おなじ</rt></ruby><ruby>畑<rt>はたけ</rt></ruby>でじゅんばんにかえて<ruby>育て<rt>そだて</rt></ruby>ることは？","使える物をくり返し使うことは？":"<ruby>使え<rt>つかえ</rt></ruby>る<ruby>物<rt>もの</rt></ruby>をくり<ruby>返し<rt>かえし</rt></ruby><ruby>使う<rt>つかう</rt></ruby>ことは？","使わない時は止める":"<ruby>使わ<rt>つかわ</rt></ruby>ない<ruby>時<rt>とき</rt></ruby>は<ruby>止める<rt>やめる</rt></ruby>","信濃川":"しなのがわ","全25問　▶":"<ruby>全<rt>ぜん</rt></ruby>25<ruby>問<rt>とん</rt></ruby>　▶","全部かくす":"<ruby>全部<rt>ぜんぶ</rt></ruby>かくす","内陸性の気候で、日本有数の晴天率です。":"ないりくせいのきこうで、<ruby>日本<rt>にっぽん</rt></ruby><ruby>有数<rt>ゆうすう</rt></ruby>のせいてんりつです。","写真、地図、年表、聞き取りを比べると変化が分かります。":"<ruby>写真<rt>しゃしん</rt></ruby>、<ruby>地図<rt>ちず</rt></ruby>、<ruby>年表<rt>ねんぴょう</rt></ruby>、<ruby>聞き<rt>きき</rt></ruby><ruby>取り<rt>とり</rt></ruby>をくらべるとへんかが<ruby>分か<rt>わか</rt></ruby>ります。","写真・図：めむろ学 p.99":"<ruby>写真<rt>しゃしん</rt></ruby>・<ruby>図<rt>ず</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.99","写真・地図：めむろ学 p.13":"<ruby>写真<rt>しゃしん</rt></ruby>・<ruby>地図<rt>ちず</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.13","写真準備中":"<ruby>写真<rt>しゃしん</rt></ruby>じゅんびちゅう","写真：めむろ学 p.12":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.12","写真：めむろ学 p.143":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.143","写真：めむろ学 p.149":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.149","写真：めむろ学 p.155":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.155","写真：めむろ学 p.26":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.26","写真：めむろ学 p.28":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.28","写真：めむろ学 p.30":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.30","写真：めむろ学 p.32":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.32","写真：めむろ学 p.40":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.40","写真：めむろ学 p.51":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.51","写真：めむろ学 p.52":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.52","写真：めむろ学 p.72":"<ruby>写真<rt>しゃしん</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.72","写真：地域学習書「めむろ学」":"<ruby>写真<rt>しゃしん</rt></ruby>：ちいき<ruby>学習<rt>がくしゅう</rt></ruby><ruby>書<rt>かき</rt></ruby>「めむろ<ruby>学<rt>がく</rt></ruby>」","冬の道路で活やくする車は？":"<ruby>冬<rt>ふゆ</rt></ruby>の<ruby>道路<rt>どうろ</rt></ruby>で<ruby>活<rt>かつ</rt></ruby>やくする<ruby>車<rt>くるま</rt></ruby>は？","出しっぱなしにする":"<ruby>出し<rt>だし</rt></ruby>っぱなしにする","函館市":"はこだて<ruby>市<rt>し</rt></ruby>","分かったことを発信する":"<ruby>分か<rt>わか</rt></ruby>ったことをはっしんする","分別":"ふんべつ","分別と収集日のルールが町をきれいにします。":"ふんべつとしゅうしゅう<ruby>日<rt>にち</rt></ruby>のルールが<ruby>町<rt>まち</rt></ruby>をきれいにします。","前のつづきから":"<ruby>前<rt>まえ</rt></ruby>のつづきから","北海道":"<ruby>北海道<rt>ほっかいどう</rt></ruby>","北海道の先住民族は？":"<ruby>北海道<rt>ほっかいどう</rt></ruby>のせんじゅうみん<ruby>族<rt>ぞく</rt></ruby>は？","十勝平野":"<ruby>十勝平野<rt>とかちへいや</rt></ruby>","南国の果物だけ":"<ruby>南国<rt>なんごく</rt></ruby>のくだものだけ","南極観測隊":"なんきょくかんそくたい","古い写真や地図":"<ruby>古い<rt>ふるい</rt></ruby><ruby>写真<rt>しゃしん</rt></ruby>や<ruby>地図<rt>ちず</rt></ruby>","同じ場所や項目で比べる":"<ruby>同じ<rt>おなじ</rt></ruby><ruby>場所<rt>ばしょ</rt></ruby>やこうもくでくらべる","品物は店に来る前、何で運ばれることが多い？":"<ruby>品物<rt>しなもの</rt></ruby>は<ruby>店<rt>みせ</rt></ruby>に<ruby>来る<rt>くる</rt></ruby><ruby>前<rt>まえ</rt></ruby>、<ruby>何で<rt>なんで</rt></ruby><ruby>運ば<rt>はこば</rt></ruby>れることが<ruby>多い<rt>おおい</rt></ruby>？","四万十川":"<ruby>四万十川<rt>しまんとがわ</rt></ruby>","図書館":"<ruby>図書館<rt>としょかん</rt></ruby>","図書館では本や資料を利用できます。":"<ruby>図書館<rt>としょかん</rt></ruby>では<ruby>本<rt>ほん</rt></ruby>やしりょうをりようできます。","図：めむろ学 p.108":"<ruby>図<rt>ず</rt></ruby>：めむろ<ruby>学<rt>がく</rt></ruby> p.108","地元で作った物を地元で食べることは？":"<ruby>地元<rt>じもと</rt></ruby>で<ruby>作っ<rt>つくっ</rt></ruby>た<ruby>物<rt>もの</rt></ruby>を<ruby>地元<rt>じもと</rt></ruby>で<ruby>食べ<rt>たべ</rt></ruby>ることは？","地元の農産物":"<ruby>地元<rt>じもと</rt></ruby>ののうさんぶつ","地図では場所、道、土地の使われ方などが分かります。":"<ruby>地図<rt>ちず</rt></ruby>では<ruby>場所<rt>ばしょ</rt></ruby>、<ruby>道<rt>みち</rt></ruby>、<ruby>土地<rt>とち</rt></ruby>の<ruby>使われ方<rt>つかわれかた</rt></ruby>などが<ruby>分か<rt>わか</rt></ruby>ります。","地域でくらす人たち":"ちいきでくらす<ruby>人<rt>にん</rt></ruby>たち","地域の伝統を未来へつなぐ方法は？":"ちいきのでんとうをみらいへつなぐほうほうは？","地域の作物をさまざまな食品に加工できます。":"ちいきの<ruby>作物<rt>さくもつ</rt></ruby>をさまざまな<ruby>食品<rt>しょくひん</rt></ruby>にかこうできます。","地域の歴史を聞き取る相手としてよいのは？":"ちいきのれきしを<ruby>聞き<rt>きき</rt></ruby><ruby>取る<rt>とる</rt></ruby><ruby>相手<rt>あいて</rt></ruby>としてよいのは？","地域の消防団は、だれが参加する？":"ちいきのしょうぼうだんは、だれがさんかする？","地域文化を調べた後にするとよいことは？":"ちいきぶんかを<ruby>調べ<rt>しらべ</rt></ruby>た<ruby>後に<rt>のちに</rt></ruby>するとよいことは？","地産地消":"ちさん<ruby>地消<rt>ちしょう</rt></ruby>","地産地消は地域の農業を身近に感じる取り組みです。":"ちさん<ruby>地消<rt>ちしょう</rt></ruby>はちいきの<ruby>農業<rt>のうぎょう</rt></ruby>を<ruby>身近<rt>みじか</rt></ruby>に<ruby>感じ<rt>かんじ</rt></ruby>る<ruby>取り組み<rt>とりくみ</rt></ruby>です。","場所や広がり":"<ruby>場所<rt>ばしょ</rt></ruby>や<ruby>広が<rt>ひろが</rt></ruby>り","外国の船員だけ":"<ruby>外国<rt>がいこく</rt></ruby>の<ruby>船員<rt>せんいん</rt></ruby>だけ","夜はだれもいない":"<ruby>夜<rt>よる</rt></ruby>はだれもいない","大きな海":"<ruby>大き<rt>おおき</rt></ruby>な<ruby>海<rt>うみ</rt></ruby>","大きな農業機械を使う主な理由は？":"<ruby>大き<rt>おおき</rt></ruby>な<ruby>農業<rt>のうぎょう</rt></ruby>きかいを<ruby>使う<rt>つかう</rt></ruby><ruby>主な<rt>おもな</rt></ruby><ruby>理由<rt>りゆう</rt></ruby>は？","大豆":"<ruby>大豆<rt>だいず</rt></ruby>","大量のビル":"たいりょうのビル","大雪山だけ":"<ruby>大雪山<rt>だいせつざん</rt></ruby>だけ","学び、伝え、参加する":"<ruby>学び<rt>まなび</rt></ruby>、つたえ、さんかする","宇宙飛行士":"うちゅうひこうし","安全に集めるため":"<ruby>安全<rt>あんぜん</rt></ruby>に<ruby>集め<rt>あつめ</rt></ruby>るため","安全に飲める水にして送り出します。":"<ruby>安全<rt>あんぜん</rt></ruby>に<ruby>飲め<rt>のめ</rt></ruby>る<ruby>水<rt>みず</rt></ruby>にして<ruby>送り出し<rt>おくりだし</rt></ruby>ます。","家や学校":"<ruby>家<rt>いえ</rt></ruby>や<ruby>学校<rt>がっこう</rt></ruby>","富士山":"ふじさん","小豆":"<ruby>小豆<rt>あずき</rt></ruby>","小麦":"<ruby>小麦<rt>こむぎ</rt></ruby>","小麦はパンやめんなどに加工されます。":"<ruby>小麦<rt>こむぎ</rt></ruby>はパンやめんなどにかこうされます。","山がなくなった":"<ruby>山<rt>やま</rt></ruby>がなくなった","島である":"<ruby>島<rt>しま</rt></ruby>である","川が消えた":"<ruby>川<rt>かわ</rt></ruby>が<ruby>消え<rt>きえ</rt></ruby>た","川の源の泉や池から流れてくる川を表します。":"<ruby>川<rt>かわ</rt></ruby>のげんのいずみや<ruby>池<rt>いけ</rt></ruby>から<ruby>流れ<rt>ながれ</rt></ruby>てくる<ruby>川<rt>かわ</rt></ruby>を<ruby>表し<rt>あらわし</rt></ruby>ます。","川を止めるため":"<ruby>川<rt>かわ</rt></ruby>を<ruby>止める<rt>やめる</rt></ruby>ため","工場で農産物を加工するよさは？":"<ruby>工場<rt>こうじょう</rt></ruby>でのうさんぶつをかこうするよさは？","帯広市":"おびひろ<ruby>市<rt>し</rt></ruby>","年表には1958年に上水道ができたとあります。":"<ruby>年表<rt>ねんぴょう</rt></ruby>には1958<ruby>年<rt>ねん</rt></ruby>に<ruby>上水道<rt>じょうすいどう</rt></ruby>ができたとあります。","広い土地を生かした畑作がさかんです。":"<ruby>広い<rt>ひろい</rt></ruby><ruby>土地<rt>とち</rt></ruby>を<ruby>生か<rt>いか</rt></ruby>した<ruby>畑作<rt>はたさく</rt></ruby>がさかんです。","広い畑":"<ruby>広い<rt>ひろい</rt></ruby><ruby>畑<rt>はたけ</rt></ruby>","広い畑で効率よく作業するため":"<ruby>広い<rt>ひろい</rt></ruby><ruby>畑<rt>はたけ</rt></ruby>でこうりつよく<ruby>作業<rt>さぎょう</rt></ruby>するため","広い畑を少ない時間で作業できます。":"<ruby>広い<rt>ひろい</rt></ruby><ruby>畑<rt>はたけ</rt></ruby>を<ruby>少ない<rt>すくない</rt></ruby><ruby>時間<rt>じかん</rt></ruby>で<ruby>作業<rt>さぎょう</rt></ruby>できます。","床に置く":"とこにおく","店が品物をならべるときの工夫は？":"<ruby>店<rt>みせ</rt></ruby>が<ruby>品物<rt>しなもの</rt></ruby>をならべるときのくふうは？","復習":"ふくしゅう","復習できたね！":"ふくしゅうできたね！","必要な分だけ使うことが節水になります。":"ひつような<ruby>分<rt>ふん</rt></ruby>だけ<ruby>使う<rt>つかう</rt></ruby>ことがせっすいになります。","忘れる":"わすれる","思いつきだけで決める":"<ruby>思い<rt>おもい</rt></ruby>つきだけで<ruby>決め<rt>きめ</rt></ruby>る","急いで渡る":"<ruby>急い<rt>いそい</rt></ruby>でわたる","急な病気やけがの人を運ぶ車は？":"<ruby>急な<rt>きゅうな</rt></ruby><ruby>病気<rt>びょうき</rt></ruby>やけがの<ruby>人<rt>にん</rt></ruby>を<ruby>運ぶ<rt>はこぶ</rt></ruby><ruby>車<rt>くるま</rt></ruby>は？","想像だけで決める":"そうぞうだけで<ruby>決め<rt>きめ</rt></ruby>る","戦後、子どもたちが楽しめるスポーツとして考案されました。":"せんご、<ruby>子ども<rt>こども</rt></ruby>たちが<ruby>楽し<rt>たのし</rt></ruby>めるスポーツとしてこうあんされました。","救急車":"きゅうきゅうしゃ","救急車が病院などへ安全に運びます。":"きゅうきゅうしゃが<ruby>病院<rt>びょういん</rt></ruby>などへ<ruby>安全<rt>あんぜん</rt></ruby>に<ruby>運び<rt>はこび</rt></ruby>ます。","敬意をもって正しく知る":"けいいをもって<ruby>正しく<rt>ただしく</rt></ruby><ruby>知る<rt>しる</rt></ruby>","文字の記録で「芽室」が初めて登場した年は？":"<ruby>文字<rt>もじ</rt></ruby>のきろくで「めむろ」がはじめて<ruby>登場<rt>とうじょう</rt></ruby>した<ruby>年<rt>ねん</rt></ruby>は？","日高山脈":"<ruby>日高<rt>ひだか</rt></ruby>さんみゃく","旭川駅":"あさひかわえき","昔だけのものとする":"<ruby>昔<rt>むかし</rt></ruby>だけのものとする","昔と今を比べるとき大切なのは？":"<ruby>昔<rt>むかし</rt></ruby>と<ruby>今<rt>いま</rt></ruby>をくらべるとき<ruby>大切<rt>たいせつ</rt></ruby>なのは？","昔の町の様子を調べる資料は？":"<ruby>昔<rt>むかし</rt></ruby>の<ruby>町<rt>まち</rt></ruby>の<ruby>様子<rt>ようす</rt></ruby>を<ruby>調べ<rt>しらべ</rt></ruby>るしりょうは？","昔の道具や町の歩みを学べる施設は？":"<ruby>昔<rt>むかし</rt></ruby>の<ruby>道具<rt>どうぐ</rt></ruby>や<ruby>町<rt>まち</rt></ruby>の<ruby>歩み<rt>あゆみ</rt></ruby>を<ruby>学べ<rt>まなべ</rt></ruby>るしせつは？","晴れる日が多い":"<ruby>晴れ<rt>はれ</rt></ruby>る<ruby>日<rt>にち</rt></ruby>が<ruby>多い<rt>おおい</rt></ruby>","本を借りたり調べたりする場所は？":"<ruby>本<rt>ほん</rt></ruby>をかりたり<ruby>調べ<rt>しらべ</rt></ruby>たりする<ruby>場所<rt>ばしょ</rt></ruby>は？","本を返すから":"<ruby>本<rt>ほん</rt></ruby>を<ruby>返す<rt>かえす</rt></ruby>から","札幌市":"さっぽろし","次はいけるよ！":"<ruby>次<rt>つぎ</rt></ruby>はいけるよ！","止まって待つ":"<ruby>止ま<rt>とま</rt></ruby>って<ruby>待つ<rt>まつ</rt></ruby>","比べる条件をそろえると変化を見つけやすくなります。":"くらべるじょうけんをそろえるとへんかを<ruby>見つ<rt>みつ</rt></ruby>けやすくなります。","水をきれいにする":"<ruby>水<rt>みず</rt></ruby>をきれいにする","水を大切にする行動は？":"<ruby>水<rt>みず</rt></ruby>を<ruby>大切<rt>たいせつ</rt></ruby>にする<ruby>行動<rt>こうどう</rt></ruby>は？","水族館":"<ruby>水族館<rt>すいぞくかん</rt></ruby>","水道の水は、どこへ送られる？":"<ruby>水道<rt>すいどう</rt></ruby>の<ruby>水<rt>みず</rt></ruby>は、どこへ<ruby>送ら<rt>おくら</rt></ruby>れる？","氷にする":"<ruby>氷<rt>こおり</rt></ruby>にする","江戸時代の初め":"えどじだいのはじめ","決めつける":"<ruby>決め<rt>きめ</rt></ruby>つける","泉や池から流れてくる川":"いずみや<ruby>池<rt>いけ</rt></ruby>から<ruby>流れ<rt>ながれ</rt></ruby>てくる<ruby>川<rt>かわ</rt></ruby>","浄水場の大切な仕事は？":"じょうすいじょうの<ruby>大切<rt>たいせつ</rt></ruby>な<ruby>仕事<rt>しごと</rt></ruby>は？","海のサンゴ":"<ruby>海<rt>うみ</rt></ruby>のサンゴ","海の漁業":"<ruby>海<rt>うみ</rt></ruby>のぎょぎょう","海の船だけ":"<ruby>海<rt>うみ</rt></ruby>の<ruby>船<rt>ふね</rt></ruby>だけ","海岸":"<ruby>海岸<rt>かいがん</rt></ruby>","海底トンネルだけ":"かいていトンネルだけ","消防・救急":"しょうぼう・きゅうきゅう","消防署":"しょうぼうしょ","消防署でいつでも出動できるようにする工夫は？":"しょうぼうしょでいつでも<ruby>出動<rt>しゅつどう</rt></ruby>できるようにするくふうは？","消防車":"しょうぼうしゃ","消防車は火を消すための道具を運びます。":"しょうぼうしゃは<ruby>火<rt>ひ</rt></ruby>を<ruby>消す<rt>けす</rt></ruby>ための<ruby>道具<rt>どうぐ</rt></ruby>を<ruby>運び<rt>はこび</rt></ruby>ます。","火事のときに出動する車は？":"<ruby>火事<rt>かじ</rt></ruby>のときに<ruby>出動<rt>しゅつどう</rt></ruby>する<ruby>車<rt>くるま</rt></ruby>は？","火事や救急のときは119番です。":"<ruby>火事<rt>かじ</rt></ruby>やきゅうきゅうのときは119<ruby>番<rt>ばん</rt></ruby>です。","災害時に安全に動くため":"さいがいじに<ruby>安全<rt>あんぜん</rt></ruby>に<ruby>動く<rt>うごく</rt></ruby>ため","田植え機":"<ruby>田植え<rt>たうえ</rt></ruby>き","町には十勝川、芽室川、美生川などが流れます。":"<ruby>町<rt>まち</rt></ruby>には<ruby>十勝川<rt>とかちがわ</rt></ruby>、めむろ<ruby>川<rt>かわ</rt></ruby>、<ruby>美生<rt>びしょう</rt></ruby><ruby>川<rt>かわ</rt></ruby>などが<ruby>流れ<rt>ながれ</rt></ruby>ます。","町の中心を通る鉄道の駅は？":"<ruby>町<rt>まち</rt></ruby>の<ruby>中心<rt>ちゅうしん</rt></ruby>を<ruby>通る<rt>とうる</rt></ruby><ruby>鉄道<rt>てつどう</rt></ruby>の<ruby>駅<rt>えき</rt></ruby>は？","町の仕事を行う中心の建物は？":"<ruby>町<rt>まち</rt></ruby>の<ruby>仕事<rt>しごと</rt></ruby>を<ruby>行う<rt>おこなう</rt></ruby><ruby>中心<rt>ちゅうしん</rt></ruby>のたてものは？","町の店":"<ruby>町<rt>まち</rt></ruby>の<ruby>店<rt>みせ</rt></ruby>","町の約42％が農地です。":"<ruby>町<rt>まち</rt></ruby>のやく42％が<ruby>農地<rt>のうち</rt></ruby>です。","町の西側には日高山脈が広がります。":"<ruby>町<rt>まち</rt></ruby>のにしがわには<ruby>日高<rt>ひだか</rt></ruby>さんみゃくが<ruby>広が<rt>ひろが</rt></ruby>ります。","町を地図で見ると分かることは？":"<ruby>町<rt>まち</rt></ruby>を<ruby>地図<rt>ちず</rt></ruby>で<ruby>見る<rt>みる</rt></ruby>と<ruby>分か<rt>わか</rt></ruby>ることは？","町を知らない人だけ":"<ruby>町<rt>まち</rt></ruby>を<ruby>知ら<rt>しら</rt></ruby>ない<ruby>人<rt>にん</rt></ruby>だけ","町を調べるよい方法は？":"<ruby>町<rt>まち</rt></ruby>を<ruby>調べ<rt>しらべ</rt></ruby>るよいほうほうは？","町役場では、くらしを支えるいろいろな仕事をします。":"<ruby>町役場<rt>まちやくば</rt></ruby>では、くらしをささえるいろいろな<ruby>仕事<rt>しごと</rt></ruby>をします。","畑で作物を育てる仕事をする人は？":"<ruby>畑<rt>はたけ</rt></ruby>で<ruby>作物<rt>さくもつ</rt></ruby>を<ruby>育て<rt>そだて</rt></ruby>る<ruby>仕事<rt>しごと</rt></ruby>をする<ruby>人<rt>にん</rt></ruby>は？","畑を小さくするため":"<ruby>畑<rt>はたけ</rt></ruby>を<ruby>小さく<rt>ちーさく</rt></ruby>するため","畑を海にできる":"<ruby>畑<rt>はたけ</rt></ruby>を<ruby>海<rt>うみ</rt></ruby>にできる","畑作":"<ruby>畑作<rt>はたさく</rt></ruby>","発電に利用する":"<ruby>発電<rt>はつでん</rt></ruby>にりようする","真珠づくり":"しんじゅづくり","知ること、体験すること、伝えることが継承につながります。":"<ruby>知る<rt>しる</rt></ruby>こと、たいけんすること、つたえることがけいしょうにつながります。","石狩平野":"いしかり<ruby>平野<rt>へいや</rt></ruby>","砂糖":"さとう","砂糖の材料になる作物は？":"さとうのざいりょうになる<ruby>作物<rt>さくもつ</rt></ruby>は？","種まきや収穫などは天気と深く関わります。":"たねまきやしゅうかくなどは<ruby>天気<rt>てんき</rt></ruby>と<ruby>深く<rt>ふかく</rt></ruby>かかわります。","種類や使い方で分け、選びやすくしています。":"しゅるいや<ruby>使い方<rt>つかいかた</rt></ruby>で<ruby>分け<rt>わけ</rt></ruby>、えらびやすくしています。","空の上":"<ruby>空<rt>そら</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>","空港":"<ruby>空港<rt>くうこう</rt></ruby>","第1問 / 25問":"<ruby>第<rt>だい</rt></ruby>1<ruby>問<rt>とん</rt></ruby> / 25<ruby>問<rt>とん</rt></ruby>","第二次世界大戦後":"だいにじせかいたいせん<ruby>後<rt>のち</rt></ruby>","約42％":"やく42％","約4％":"やく4％","約90％":"やく90％","紙だけ":"<ruby>紙<rt>かみ</rt></ruby>だけ","縄文時代":"じょうもんじだい","自分だけでかくす":"<ruby>自分<rt>じぶん</rt></ruby>だけでかくす","自然とのつながり":"しぜんとのつながり","自然の中のさまざまなものにカムイを感じてきました。":"しぜんの<ruby>中の<rt>なかの</rt></ruby>さまざまなものにカムイを<ruby>感じ<rt>かんじ</rt></ruby>てきました。","船員":"<ruby>船員<rt>せんいん</rt></ruby>","芽室に戸長役場が置かれた年は？":"めむろに<ruby>戸長<rt>こちょう</rt></ruby><ruby>役場<rt>やくば</rt></ruby>がおかれた<ruby>年<rt>ねん</rt></ruby>は？","芽室川":"めむろ<ruby>川<rt>かわ</rt></ruby>","芽室村が芽室町になった年は？":"めむろ<ruby>村<rt>むら</rt></ruby>がめむろ<ruby>町<rt>まち</rt></ruby>になった<ruby>年<rt>ねん</rt></ruby>は？","芽室町があるのは、どの都道府県？":"めむろ<ruby>町<rt>まち</rt></ruby>があるのは、どのとどうふけん？","芽室町がある平野は？":"めむろ<ruby>町<rt>まち</rt></ruby>がある<ruby>平野<rt>へいや</rt></ruby>は？","芽室町ご当地検定":"めむろ<ruby>町<rt>まち</rt></ruby>ご<ruby>当地<rt>とうち</rt></ruby>けんてい","芽室町で生まれたスポーツは？":"めむろ<ruby>町<rt>まち</rt></ruby>で<ruby>生まれ<rt>うまれ</rt></ruby>たスポーツは？","芽室町について、見て・考えて・もっと好きになろう。":"めむろ<ruby>町<rt>まち</rt></ruby>について、<ruby>見て<rt>みて</rt></ruby>・<ruby>考え<rt>かんがえ</rt></ruby>て・もっとすきになろう。","芽室町にとなり合う大きな市は？":"めむろ<ruby>町<rt>まち</rt></ruby>にとなり<ruby>合う<rt>あう</rt></ruby><ruby>大き<rt>おおき</rt></ruby>な<ruby>市<rt>し</rt></ruby>は？","芽室町には広い畑がたくさんあります。":"めむろ<ruby>町<rt>まち</rt></ruby>には<ruby>広い<rt>ひろい</rt></ruby><ruby>畑<rt>はたけ</rt></ruby>がたくさんあります。","芽室町に多い食品工場と深い関係があるのは？":"めむろ<ruby>町<rt>まち</rt></ruby>に<ruby>多い<rt>おおい</rt></ruby><ruby>食品<rt>しょくひん</rt></ruby><ruby>工場<rt>こうじょう</rt></ruby>と<ruby>深い<rt>ふかい</rt></ruby>かんけいがあるのは？","芽室町のことをよく学び、全問正解したことを認定します。":"めむろ<ruby>町<rt>まち</rt></ruby>のことをよく<ruby>学び<rt>まなび</rt></ruby>、ぜんもんせいかいしたことをにんていします。","芽室町の代表的な作物は？":"めむろ<ruby>町<rt>まち</rt></ruby>のだいひょうてきな<ruby>作物<rt>さくもつ</rt></ruby>は？","芽室町の土地で多く見られるものは？":"めむろ<ruby>町<rt>まち</rt></ruby>の<ruby>土地<rt>とち</rt></ruby>で<ruby>多く<rt>おおく</rt></ruby><ruby>見ら<rt>みら</rt></ruby>れるものは？","芽室町の気候の特ちょうは？":"めむろ<ruby>町<rt>まち</rt></ruby>のきこうのとくちょうは？","芽室町の西に見える山なみは？":"めむろ<ruby>町<rt>まち</rt></ruby>の<ruby>西<rt>にし</rt></ruby>に<ruby>見え<rt>みえ</rt></ruby>る<ruby>山<rt>やま</rt></ruby>なみは？","芽室町の農地は町の面積のおよそ何％？":"めむろ<ruby>町<rt>まち</rt></ruby>の<ruby>農地<rt>のうち</rt></ruby>は<ruby>町<rt>まち</rt></ruby>のめんせきのおよそ<ruby>何<rt>なに</rt></ruby>％？","芽室町の農業で中心となるのは？":"めむろ<ruby>町<rt>まち</rt></ruby>の<ruby>農業<rt>のうぎょう</rt></ruby>で<ruby>中心<rt>ちゅうしん</rt></ruby>となるのは？","芽室町の郷土芸能の一つは？":"めむろ<ruby>町<rt>まち</rt></ruby>のきょうどげいのうの<ruby>一つ<rt>ひとつ</rt></ruby>は？","芽室町は北海道の内陸にあります。":"めむろ<ruby>町<rt>まち</rt></ruby>は<ruby>北海道<rt>ほっかいどう</rt></ruby>のないりくにあります。","芽室町は北海道の十勝地方にあります。":"めむろ<ruby>町<rt>まち</rt></ruby>は<ruby>北海道<rt>ほっかいどう</rt></ruby>の<ruby>十勝<rt>とかち</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>にあります。","芽室町は帯広市にとなり合っています。":"めむろ<ruby>町<rt>まち</rt></ruby>はおびひろ<ruby>市<rt>し</rt></ruby>にとなり<ruby>合っ<rt>あっ</rt></ruby>ています。","芽室町は広い十勝平野にあります。":"めむろ<ruby>町<rt>まち</rt></ruby>は<ruby>広い<rt>ひろい</rt></ruby><ruby>十勝平野<rt>とかちへいや</rt></ruby>にあります。","芽室町は海に面している？":"めむろ<ruby>町<rt>まち</rt></ruby>は<ruby>海<rt>うみ</rt></ruby>に<ruby>面し<rt>めんし</rt></ruby>ている？","芽室町を流れる川はどれ？":"めむろ<ruby>町<rt>まち</rt></ruby>を<ruby>流れ<rt>ながれ</rt></ruby>る<ruby>川<rt>かわ</rt></ruby>はどれ？","芽室町役場":"めむろ<ruby>町役場<rt>まちやくば</rt></ruby>","芽室駅":"めむろ<ruby>駅<rt>えき</rt></ruby>","芽室駅が開業した年は？":"めむろ<ruby>駅<rt>えき</rt></ruby>が<ruby>開業<rt>かいぎょう</rt></ruby>した<ruby>年<rt>ねん</rt></ruby>は？","芽室駅は1907（明治40）年に開業しました。":"めむろ<ruby>駅<rt>えき</rt></ruby>は1907（めいじ40）<ruby>年<rt>ねん</rt></ruby>に<ruby>開業<rt>かいぎょう</rt></ruby>しました。","製糖工場では、てん菜から砂糖を作ります。":"せいとう<ruby>工場<rt>こうじょう</rt></ruby>では、てんなからさとうを<ruby>作り<rt>つくり</rt></ruby>ます。","見学して話を聞く":"<ruby>見学<rt>けんがく</rt></ruby>して<ruby>話<rt>はなし</rt></ruby>を<ruby>聞く<rt>きく</rt></ruby>","見学やインタビューで本物の情報を集められます。":"<ruby>見学<rt>けんがく</rt></ruby>やインタビューで<ruby>本物<rt>ほんもの</rt></ruby>のじょうほうを<ruby>集め<rt>あつめ</rt></ruby>られます。","認 定 証":"にん <ruby>定<rt>てい</rt></ruby> しょう","警察":"けいさつ","豊かな農産物を生かす食品製造が発達しています。":"ゆたかなのうさんぶつを<ruby>生か<rt>いか</rt></ruby>す<ruby>食品<rt>しょくひん</rt></ruby>せいぞうがはったつしています。","買いやすく分類する":"<ruby>買い<rt>かい</rt></ruby>やすくぶんるいする","買い物のため":"<ruby>買い物<rt>かいもの</rt></ruby>のため","資料と多くの意見をもとに考えることが大切です。":"しりょうと<ruby>多く<rt>おおく</rt></ruby>の<ruby>意見<rt>いけん</rt></ruby>をもとに<ruby>考え<rt>かんがえ</rt></ruby>ることが<ruby>大切<rt>たいせつ</rt></ruby>です。","資料をなくす":"しりょうをなくす","資料を捨てる":"しりょうをすてる","資料を見ない":"しりょうを<ruby>見な<rt>みな</rt></ruby>い","資源を分別し、新しい製品の原料にします。":"しげんをふんべつし、<ruby>新しい<rt>あたらしい</rt></ruby>せいひんのげんりょうにします。","資源を原料にもどして作り直すことは？":"しげんをげんりょうにもどして<ruby>作り直す<rt>つくりなおす</rt></ruby>ことは？","赤信号のとき、歩く人はどうする？":"あかしんごうのとき、<ruby>歩く<rt>あるく</rt></ruby><ruby>人<rt>にん</rt></ruby>はどうする？","車を動かさない":"<ruby>車<rt>くるま</rt></ruby>を<ruby>動か<rt>うごか</rt></ruby>さない","輪作":"りんさく","輪作は土を守り、病気などを防ぐ工夫です。":"りんさくは<ruby>土<rt>つち</rt></ruby>を<ruby>守り<rt>まもり</rt></ruby>、<ruby>病気<rt>びょうき</rt></ruby>などをふせぐくふうです。","農作物を集め、販売も支える組織は？":"<ruby>農作物<rt>のうさくぶつ</rt></ruby>を<ruby>集め<rt>あつめ</rt></ruby>、はんばいもささえるそしきは？","農家":"<ruby>農家<rt>のうか</rt></ruby>","農家が天気をよく調べるのはなぜ？":"<ruby>農家<rt>のうか</rt></ruby>が<ruby>天気<rt>てんき</rt></ruby>をよく<ruby>調べ<rt>しらべ</rt></ruby>るのはなぜ？","農家の人たちが工夫して作物を育てています。":"<ruby>農家<rt>のうか</rt></ruby>の<ruby>人<rt>にん</rt></ruby>たちがくふうして<ruby>作物<rt>さくもつ</rt></ruby>を<ruby>育て<rt>そだて</rt></ruby>ています。","速く走る競争のため":"<ruby>速く<rt>はやく</rt></ruby><ruby>走る<rt>はしる</rt></ruby>きょうそうのため","連休":"れんきゅう","道に広げるため":"<ruby>道<rt>みち</rt></ruby>に<ruby>広げ<rt>ひろげ</rt></ruby>るため","道をせまくするため":"<ruby>道<rt>みち</rt></ruby>をせまくするため","道路で遊ぶ":"<ruby>道路<rt>どうろ</rt></ruby>で<ruby>遊ぶ<rt>あそぶ</rt></ruby>","道路にまく":"<ruby>道路<rt>どうろ</rt></ruby>にまく","道路を使って多くの品物が運ばれます。":"<ruby>道路<rt>どうろ</rt></ruby>を<ruby>使って<rt>つかって</rt></ruby><ruby>多く<rt>おおく</rt></ruby>の<ruby>品物<rt>しなもの</rt></ruby>が<ruby>運ば<rt>はこば</rt></ruby>れます。","遠足":"<ruby>遠足<rt>えんそく</rt></ruby>","野球":"<ruby>野球<rt>やきゅう</rt></ruby>","釧路駅":"くしろえき","鉄道が開通して町に起きた変化は？":"<ruby>鉄道<rt>てつどう</rt></ruby>が<ruby>開通<rt>かいつう</rt></ruby>して<ruby>町<rt>まち</rt></ruby>に<ruby>起き<rt>おき</rt></ruby>たへんかは？","鉄道は町の発展や物の輸送に大きく関わりました。":"<ruby>鉄道<rt>てつどう</rt></ruby>は<ruby>町<rt>まち</rt></ruby>のはってんや<ruby>物<rt>もの</rt></ruby>のゆそうに<ruby>大きく<rt>おおきく</rt></ruby>かかわりました。","鉄道や道路が大切な理由は？":"<ruby>鉄道<rt>てつどう</rt></ruby>や<ruby>道路<rt>どうろ</rt></ruby>が<ruby>大切<rt>たいせつ</rt></ruby>な<ruby>理由<rt>りゆう</rt></ruby>は？","長く地域にくらす人":"<ruby>長く<rt>ながく</rt></ruby>ちいきにくらす<ruby>人<rt>にん</rt></ruby>","長野県":"<ruby>長野県<rt>ながのけん</rt></ruby>","開拓が進む前から北海道にくらしていた人々は？":"かいたくが<ruby>進む<rt>すすむ</rt></ruby><ruby>前か<rt>ぜんか</rt></ruby>ら<ruby>北海道<rt>ほっかいどう</rt></ruby>にくらしていた<ruby>人々<rt>ひとびと</rt></ruby>は？","関東平野":"かんとうへいや","防災訓練を行う目的は？":"ぼうさいくんれんを<ruby>行う<rt>おこなう</rt></ruby>もくてきは？","阿波おどりだけ":"あわおどりだけ","除雪車":"じょせつしゃ","除雪車が雪をよけて道路を通りやすくします。":"じょせつしゃが<ruby>雪<rt>ゆき</rt></ruby>をよけて<ruby>道路<rt>どうろ</rt></ruby>を<ruby>通り<rt>とうり</rt></ruby>やすくします。","雪を降らせる":"<ruby>雪<rt>ゆき</rt></ruby>をふらせる","雪上の競技だけ":"<ruby>雪上<rt>せつじょう</rt></ruby>のきょうぎだけ","電車を動かす":"<ruby>電車<rt>でんしゃ</rt></ruby>を<ruby>動か<rt>うごか</rt></ruby>す","青森県":"<ruby>青森県<rt>あおもりけん</rt></ruby>","面していない":"<ruby>面し<rt>めんし</rt></ruby>ていない","面している":"<ruby>面し<rt>めんし</rt></ruby>ている","音の大きさ":"<ruby>音<rt>おと</rt></ruby>の<ruby>大きさ<rt>おおきさ</rt></ruby>","音を出すため":"<ruby>音<rt>おと</rt></ruby>を<ruby>出す<rt>だす</rt></ruby>ため","食べ物の味":"<ruby>食べ物<rt>たべもの</rt></ruby>の<ruby>味<rt>あじ</rt></ruby>","食品にして届けられる":"<ruby>食品<rt>しょくひん</rt></ruby>にしてとどけられる","駅名を決めるから":"<ruby>駅名<rt>えきめい</rt></ruby>を<ruby>決め<rt>きめ</rt></ruby>るから","駅員":"<ruby>駅員<rt>えきいん</rt></ruby>","高いビル":"<ruby>高い<rt>たかい</rt></ruby>ビル","高い火山":"<ruby>高い<rt>たかい</rt></ruby><ruby>火山<rt>かざん</rt></ruby>","鳥にあげるため":"<ruby>鳥<rt>とり</rt></ruby>にあげるため","🌽 畑のまち":" <ruby>畑<rt>はたけ</rt></ruby>のまち","🏑 ゲートボール発祥":" ゲートボールはっしょう"});
+
+function escapeKidText(text) {
+  const node = document.createElement("span");
+  node.textContent = String(text);
+  return node.innerHTML;
+}
+
+function kidHtml(text) {
+  const value = String(text);
+  return normalizeKidHtml(kidTextMap[value] || escapeKidText(value));
+}
+
+function normalizeKidHtml(html) {
+  return html
+    .replaceAll("めむろ<ruby>町役場<rt>まちやくば</rt></ruby>", "めむろ<ruby>町<rt>ちょう</rt></ruby><ruby>役場<rt>やくば</rt></ruby>")
+    .replaceAll("めむろ<ruby>町<rt>まち</rt></ruby>", "めむろ<ruby>町<rt>ちょう</rt></ruby>");
+}
+
+function setKidHtml(element, text) {
+  element.innerHTML = kidHtml(text);
+}
+
+function applyKidText(root = document.body) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const targets = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const parent = node.parentElement;
+    const text = node.nodeValue.trim();
+    if (!text || !parent || ["SCRIPT", "STYLE", "RT"].includes(parent.tagName)) continue;
+    if (kidTextMap[text]) targets.push([node, text]);
+  }
+  targets.forEach(([node, text]) => {
+    const leading = node.nodeValue.match(/^\s*/)[0];
+    const trailing = node.nodeValue.match(/\s*$/)[0];
+    const span = document.createElement("span");
+    span.className = "kid-readable";
+    span.innerHTML = normalizeKidHtml(kidTextMap[text]);
+    node.replaceWith(document.createTextNode(leading), span, document.createTextNode(trailing));
+  });
+}
+
+</script>
+  <script>
+"use strict";
+
+// 問題データ。image を空文字にすると画像枠を表示しません。
+// 写真を追加するときは images フォルダへ入れ、ファイル名を image に指定します。
+const questions = [
+  { level:"beginner", question:"芽室町があるのは、どの都道府県？", image:"memuro-map.jpg", choices:["北海道","青森県","長野県"], answer:0, explanation:"芽室町は北海道の十勝地方にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町がある平野は？", image:"fields.jpg", choices:["十勝平野","石狩平野","関東平野"], answer:0, explanation:"芽室町は広い十勝平野にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町の西に見える山なみは？", image:"fields.jpg", choices:["日高山脈","富士山","大雪山だけ"], answer:0, explanation:"町の西側には日高山脈が広がります。", source:"めむろ学 p.14–17" },
+  { level:"beginner", question:"芽室町の土地で多く見られるものは？", image:"fields.jpg", choices:["広い畑","高いビル","海岸"], answer:0, explanation:"芽室町には広い畑がたくさんあります。", source:"めむろ学 p.16–19" },
+  { level:"beginner", question:"芽室町にとなり合う大きな市は？", image:"memuro-map.jpg", choices:["帯広市","札幌市","函館市"], answer:0, explanation:"芽室町は帯広市にとなり合っています。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"町の中心を通る鉄道の駅は？", image:"old-station.jpg", choices:["芽室駅","釧路駅","旭川駅"], answer:0, explanation:"JR根室本線の芽室駅があります。写真は開業したころの芽室駅です。", source:"めむろ学 p.72" },
+  { level:"beginner", question:"町の仕事を行う中心の建物は？", image:"town-hall.jpg", choices:["芽室町役場","水族館","空港"], answer:0, explanation:"町役場では、くらしを支えるいろいろな仕事をします。", source:"めむろ学 p.20–23" },
+  { level:"beginner", question:"本を借りたり調べたりする場所は？", image:"library.jpg", choices:["図書館","消防署","交番"], answer:0, explanation:"図書館では本や資料を利用できます。", source:"めむろ学 p.20–23" },
+  { level:"beginner", question:"芽室町を流れる川はどれ？", image:"memuro-river.jpg", choices:["芽室川","信濃川","四万十川"], answer:0, explanation:"町には十勝川、芽室川、美生川などが流れます。", source:"めむろ学 p.14–17" },
+  { level:"beginner", question:"芽室町は海に面している？", image:"", choices:["面していない","面している","島である"], answer:0, explanation:"芽室町は北海道の内陸にあります。", source:"めむろ学 p.14–15" },
+  { level:"beginner", question:"芽室町の代表的な作物は？", image:"corn.jpg", choices:["スイートコーン","パイナップル","バナナ"], answer:0, explanation:"スイートコーンは芽室町を代表する作物の一つです。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"じゃがいもの別のよび方は？", image:"potato.jpg", choices:["ばれいしょ","てんさい","小麦"], answer:0, explanation:"ばれいしょは、じゃがいものことです。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"パンやめんの材料になる作物は？", image:"wheat.jpg", choices:["小麦","小豆","ビート"], answer:0, explanation:"小麦はパンやめんなどに加工されます。", source:"めむろ学 p.26–31" },
+  { level:"beginner", question:"砂糖の材料になる作物は？", image:"sugar-beet.jpg", choices:["てんさい（ビート）","たまねぎ","大豆"], answer:0, explanation:"てんさいは砂糖の大切な原料です。", source:"めむろ学 p.26–35" },
+  { level:"beginner", question:"芽室町の農業で中心となるのは？", image:"tractor.jpg", choices:["畑作","真珠づくり","海の漁業"], answer:0, explanation:"広い土地を生かした畑作がさかんです。", source:"めむろ学 p.26–37" },
+  { level:"beginner", question:"畑で作物を育てる仕事をする人は？", image:"", choices:["農家","駅員","船員"], answer:0, explanation:"農家の人たちが工夫して作物を育てています。", source:"めむろ学 p.26–37" },
+  { level:"beginner", question:"火事のときに出動する車は？", image:"fire-engine.jpg", choices:["消防車","ごみ収集車","トラクター"], answer:0, explanation:"消防車は火を消すための道具を運びます。", source:"めむろ学 p.50–59" },
+  { level:"beginner", question:"急な病気やけがの人を運ぶ車は？", image:"ambulance.jpg", choices:["救急車","バス","除雪車"], answer:0, explanation:"救急車が病院などへ安全に運びます。", source:"めむろ学 p.50–59" },
+  { level:"beginner", question:"赤信号のとき、歩く人はどうする？", image:"", choices:["止まって待つ","急いで渡る","道路で遊ぶ"], answer:0, explanation:"交通ルールを守ることが安全につながります。", source:"めむろ学 p.62–69" },
+  { level:"beginner", question:"ごみを決められた日に出すのはなぜ？", image:"", choices:["安全に集めるため","道に広げるため","鳥にあげるため"], answer:0, explanation:"分別と収集日のルールが町をきれいにします。", source:"めむろ学 p.104–117" },
+  { level:"beginner", question:"使える物をくり返し使うことは？", image:"reuse.jpg", choices:["リユース","リセット","リレー"], answer:0, explanation:"リユースは、物をくり返し使うことです。", source:"めむろ学 p.115" },
+  { level:"beginner", question:"水道の水は、どこへ送られる？", image:"water-plant.jpg", choices:["家や学校","空の上","海の船だけ"], answer:0, explanation:"きれいにした水が水道管で家や学校へ届きます。", source:"めむろ学 p.90–99" },
+  { level:"beginner", question:"冬の道路で活やくする車は？", image:"snowplow.jpg", choices:["除雪車","消防車","田植え機"], answer:0, explanation:"除雪車が雪をよけて道路を通りやすくします。", source:"めむろ学 p.70–77" },
+  { level:"beginner", question:"町を地図で見ると分かることは？", image:"", choices:["場所や広がり","食べ物の味","音の大きさ"], answer:0, explanation:"地図では場所、道、土地の使われ方などが分かります。", source:"めむろ学 p.14–23" },
+  { level:"beginner", question:"町を調べるよい方法は？", image:"", choices:["見学して話を聞く","思いつきだけで決める","何も見ない"], answer:0, explanation:"見学やインタビューで本物の情報を集められます。", source:"めむろ学 学び方コーナー" },
+
+  { level:"intermediate", question:"芽室町の農地は町の面積のおよそ何％？", image:"fields.jpg", choices:["約42％","約4％","約90％"], answer:0, explanation:"町の約42％が農地です。", source:"めむろ学 p.16・町公式「農業の概要」" },
+  { level:"intermediate", question:"芽室町の気候の特ちょうは？", image:"fields.jpg", choices:["晴れる日が多い","一年中雨","一年中暑い"], answer:0, explanation:"内陸性の気候で、日本有数の晴天率です。", source:"めむろ学 p.24–25" },
+  { level:"intermediate", question:"作物を同じ畑で順番に変えて育てることは？", image:"potato.jpg", choices:["輪作","連休","分別"], answer:0, explanation:"輪作は土を守り、病気などを防ぐ工夫です。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"大きな農業機械を使う主な理由は？", image:"harvester.jpg", choices:["広い畑で効率よく作業するため","音を出すため","道をせまくするため"], answer:0, explanation:"広い畑を少ない時間で作業できます。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"農家が天気をよく調べるのはなぜ？", image:"tractor.jpg", choices:["作業や育ち方に関係するから","駅名を決めるから","本を返すから"], answer:0, explanation:"種まきや収穫などは天気と深く関わります。", source:"めむろ学 p.30–37" },
+  { level:"intermediate", question:"農作物を集め、販売も支える組織は？", image:"ja.jpg", choices:["JA","消防署","図書館"], answer:0, explanation:"JAは農家の仕事や農産物の流通を支えます。", source:"めむろ学 p.34–39" },
+  { level:"intermediate", question:"工場で農産物を加工するよさは？", image:"food-factory.jpg", choices:["食品にして届けられる","畑を海にできる","雪を降らせる"], answer:0, explanation:"地域の作物をさまざまな食品に加工できます。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"ビートから作られるものは？", image:"sugar-beet.jpg", choices:["砂糖","紙だけ","ガラス"], answer:0, explanation:"製糖工場では、てんさいから砂糖を作ります。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"店が品物をならべるときの工夫は？", image:"supermarket.jpg", choices:["買いやすく分類する","全部かくす","床に置く"], answer:0, explanation:"種類や使い方で分け、選びやすくしています。", source:"めむろ学 p.78–89" },
+  { level:"intermediate", question:"品物は店に来る前、何で運ばれることが多い？", image:"delivery-truck.jpg", choices:["トラック","救急車","消防車"], answer:0, explanation:"道路を使って多くの品物が運ばれます。", source:"めむろ学 p.78–89" },
+  { level:"intermediate", question:"地元で作った物を地元で食べることは？", image:"supermarket.jpg", choices:["地産地消","遠足","輪作"], answer:0, explanation:"地産地消は地域の農業を身近に感じる取り組みです。", source:"めむろ学 p.26–49" },
+  { level:"intermediate", question:"消防署でいつでも出動できるようにする工夫は？", image:"fire-station.jpg", choices:["交代で勤務する","夜はだれもいない","車を動かさない"], answer:0, explanation:"いつ起きるか分からない火事や救急に備えます。", source:"めむろ学 p.50–59" },
+  { level:"intermediate", question:"地域の消防団は、だれが参加する？", image:"fire-engine.jpg", choices:["地域でくらす人たち","外国の船員だけ","ロボットだけ"], answer:0, explanation:"仕事を持ちながら地域を守る人たちが活動します。", source:"めむろ学 p.58–61" },
+  { level:"intermediate", question:"防災訓練を行う目的は？", image:"drill.jpg", choices:["災害時に安全に動くため","速く走る競争のため","買い物のため"], answer:0, explanation:"ふだんの練習が、いざという時の安全につながります。", source:"めむろ学 p.58–61" },
+  { level:"intermediate", question:"110番につながるのは？", image:"", choices:["警察","消防・救急","図書館"], answer:0, explanation:"事件や事故は110番、火事や救急は119番です。", source:"めむろ学 p.50–69" },
+  { level:"intermediate", question:"119番につながるのは？", image:"", choices:["消防・救急","警察","町の店"], answer:0, explanation:"火事や救急のときは119番です。", source:"めむろ学 p.50–59" },
+  { level:"intermediate", question:"浄水場の大切な仕事は？", image:"water-plant.jpg", choices:["水をきれいにする","ごみを燃やす","電車を動かす"], answer:0, explanation:"安全に飲める水にして送り出します。", source:"めむろ学 p.90–99" },
+  { level:"intermediate", question:"水を大切にする行動は？", image:"", choices:["使わない時は止める","出しっぱなしにする","道路にまく"], answer:0, explanation:"必要な分だけ使うことが節水になります。", source:"めむろ学 p.90–103" },
+  { level:"intermediate", question:"くりりんセンターで燃やすごみの熱は？", image:"waste-center.jpg", choices:["発電に利用する","そのまま捨てる","氷にする"], answer:0, explanation:"ごみを燃やした熱を利用して電気を作ります。", source:"めむろ学 p.108" },
+  { level:"intermediate", question:"ごみになる物を受け取らない4Rは？", image:"waste-center.jpg", choices:["リフューズ","リユース","リサイクル"], answer:0, explanation:"Refuseは、不要な物をことわることです。", source:"めむろ学 p.115" },
+  { level:"intermediate", question:"ごみそのものを減らす4Rは？", image:"", choices:["リデュース","リユース","リサイクル"], answer:0, explanation:"Reduceは、ごみを減らす工夫です。", source:"めむろ学 p.115" },
+  { level:"intermediate", question:"資源を原料にもどして作り直すことは？", image:"waste-center.jpg", choices:["リサイクル","リフューズ","リデュース"], answer:0, explanation:"資源を分別し、新しい製品の原料にします。", source:"めむろ学 p.104–117" },
+  { level:"intermediate", question:"鉄道や道路が大切な理由は？", image:"old-station.jpg", choices:["人や物を運ぶため","川を止めるため","畑を小さくするため"], answer:0, explanation:"交通はくらしや産業をつないでいます。", source:"めむろ学 p.70–77" },
+  { level:"intermediate", question:"芽室町に多い食品工場と深い関係があるのは？", image:"", choices:["地元の農産物","海のサンゴ","南国の果物だけ"], answer:0, explanation:"豊かな農産物を生かす食品製造が発達しています。", source:"めむろ学 p.40–49" },
+  { level:"intermediate", question:"くらしを良くする話し合いに大切なのは？", image:"", choices:["いろいろな人の意見を聞く","一人だけで決める","資料を見ない"], answer:0, explanation:"資料と多くの意見をもとに考えることが大切です。", source:"めむろ学 学び方コーナー" },
+
+  { level:"advanced", question:"「芽室」の名のもとになったアイヌ語は？", image:"ainu-place-name.jpg", choices:["メム・オロ","サッ・ポロ","トカプチだけ"], answer:0, explanation:"メム・オロが転じて「芽室」になったとされます。", source:"めむろ学 p.142–159・町公式「芽室町について」" },
+  { level:"advanced", question:"「メム・オロ」に近い意味は？", image:"spring-river.jpg", choices:["泉や池から流れてくる川","大きな海","高い火山"], answer:0, explanation:"川の源の泉や池から流れてくる川を表します。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"文字の記録で「芽室」が初めて登場した年は？", image:"old-map.jpg", choices:["1800年","2000年","1600年"], answer:0, explanation:"1800年の十勝川調査の地図に「メモロ」と記されました。", source:"めむろ学 p.160–169・町公式「町の紹介」" },
+  { level:"advanced", question:"芽室に戸長役場が置かれた年は？", image:"old-office.jpg", choices:["1900年","1945年","2020年"], answer:0, explanation:"1900年に戸長役場が置かれ、行政の中心となりました。", source:"めむろ学 p.160–169・町公式「町の紹介」" },
+  { level:"advanced", question:"芽室駅が開業した年は？", image:"old-station.jpg", choices:["1907年","1807年","2007年"], answer:0, explanation:"芽室駅は1907（明治40）年に開業しました。", source:"めむろ学 p.72" },
+  { level:"advanced", question:"芽室村が芽室町になった年は？", image:"old-station.jpg", choices:["1942年","1906年","1992年"], answer:0, explanation:"1942年に町制が施行され、芽室町になりました。", source:"めむろ学 p.99・町の歴史資料" },
+  { level:"advanced", question:"昔の道具や町の歩みを学べる施設は？", image:"nenrin.jpg", choices:["ふるさと歴史館ねんりん","空港","水族館"], answer:0, explanation:"ねんりんでは芽室の歴史やくらしを学べます。", source:"めむろ学 p.160–177" },
+  { level:"advanced", question:"北海道の先住民族は？", image:"ainu-culture.jpg", choices:["アイヌ民族","マオリ民族","サーミ民族"], answer:0, explanation:"アイヌ民族は独自の言語や文化を育んできました。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌの人々が大切にしてきたものは？", image:"ainu-culture.jpg", choices:["自然とのつながり","大量のビル","海底トンネルだけ"], answer:0, explanation:"自然の中のさまざまなものにカムイを感じてきました。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌ語で神を表す言葉は？", image:"", choices:["カムイ","コタン","モシリ"], answer:0, explanation:"カムイは神や、人の力をこえた存在を表します。", source:"めむろ学 p.148–153" },
+  { level:"advanced", question:"アイヌ語で集落を表す言葉は？", image:"kotan.jpg", choices:["コタン","カムイ","イオマンテ"], answer:0, explanation:"コタンは人々がくらす集落です。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"アイヌ文化を学ぶとき大切な姿勢は？", image:"", choices:["敬意をもって正しく知る","決めつける","昔だけのものとする"], answer:0, explanation:"今も受けつがれる文化として敬意をもって学びます。", source:"めむろ学 p.142–159" },
+  { level:"advanced", question:"芽室町で生まれたスポーツは？", image:"gateball.jpg", choices:["ゲートボール","野球","ラグビー"], answer:0, explanation:"ゲートボールは芽室町が発祥の地です。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールが考案されたのは、いつごろ？", image:"gateball.jpg", choices:["第二次世界大戦後","江戸時代の初め","縄文時代"], answer:0, explanation:"戦後、子どもたちが楽しめるスポーツとして考案されました。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールでボールを通すものは？", image:"gateball.jpg", choices:["ゲート","ゴールネット","バスケット"], answer:0, explanation:"スティックで打ち、決められたゲートを通します。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"ゲートボールは主にどんな競技？", image:"gateball.jpg", choices:["チームで協力する競技","一人だけの水泳","雪上の競技だけ"], answer:0, explanation:"仲間と作戦を考えながら進めるチーム競技です。", source:"めむろ学 p.140–143" },
+  { level:"advanced", question:"地域の伝統を未来へつなぐ方法は？", image:"taiko.jpg", choices:["学び、伝え、参加する","忘れる","資料を捨てる"], answer:0, explanation:"知ること、体験すること、伝えることが継承につながります。", source:"めむろ学 p.178–191" },
+  { level:"advanced", question:"芽室町の郷土芸能の一つは？", image:"memuoro-taiko.jpg", choices:["メムオロ太鼓","阿波おどりだけ","ねぶただけ"], answer:0, explanation:"メムオロ太鼓は地域で受けつがれる郷土芸能です。", source:"めむろ学 p.188–191" },
+  { level:"advanced", question:"昔の町の様子を調べる資料は？", image:"historic-photo.jpg", choices:["古い写真や地図","今日の天気だけ","うわさだけ"], answer:0, explanation:"写真、地図、年表、聞き取りを比べると変化が分かります。", source:"めむろ学 p.160–177" },
+  { level:"advanced", question:"昔と今を比べるとき大切なのは？", image:"", choices:["同じ場所や項目で比べる","一つだけ見る","想像だけで決める"], answer:0, explanation:"比べる条件をそろえると変化を見つけやすくなります。", source:"めむろ学 学び方コーナー" },
+  { level:"advanced", question:"開拓が進む前から北海道にくらしていた人々は？", image:"", choices:["アイヌの人々","宇宙飛行士","南極観測隊"], answer:0, explanation:"アイヌの人々は長く北海道で文化を築いてきました。", source:"めむろ学 p.142–169" },
+  { level:"advanced", question:"鉄道が開通して町に起きた変化は？", image:"old-station.jpg", choices:["人や物が行き来しやすくなった","川が消えた","山がなくなった"], answer:0, explanation:"鉄道は町の発展や物の輸送に大きく関わりました。", source:"めむろ学 p.70–77・p.160–177" },
+  { level:"advanced", question:"上水道が芽室町にできた年は？", image:"water-plant.jpg", choices:["1958年","1858年","2008年"], answer:0, explanation:"年表には1958年に上水道ができたとあります。", source:"めむろ学 p.99" },
+  { level:"advanced", question:"地域の歴史を聞き取る相手としてよいのは？", image:"", choices:["長く地域にくらす人","だれにも聞かない","町を知らない人だけ"], answer:0, explanation:"体験した人の話は、資料と合わせて大切な手がかりになります。", source:"めむろ学 学び方コーナー" },
+  { level:"advanced", question:"地域文化を調べた後にするとよいことは？", image:"", choices:["分かったことを発信する","自分だけでかくす","資料をなくす"], answer:0, explanation:"まとめて伝えることで、文化を知る人が増えます。", source:"めむろ学 p.188–191" }
+];
+
+const levelInfo = {
+  beginner: { name: "まちたんけん", label: "ビギナー級" },
+  intermediate: { name: "くらし・しごとたんけん", label: "中級" },
+  advanced: { name: "れきし・文化たんけん", label: "上級" }
+};
+const imageCredits = {
+  "memuro-map.jpg": "写真・地図：めむろ学 p.13",
+  "fields.jpg": "写真：めむろ学 p.12",
+  "corn.jpg": "写真：めむろ学 p.26",
+  "sugar-beet.jpg": "写真：めむろ学 p.26",
+  "wheat.jpg": "写真：めむろ学 p.26",
+  "potato.jpg": "写真：めむろ学 p.28",
+  "harvester.jpg": "写真：めむろ学 p.28",
+  "tractor.jpg": "写真：めむろ学 p.30",
+  "food-factory.jpg": "写真：めむろ学 p.32",
+  "supermarket.jpg": "写真：めむろ学 p.40",
+  "fire-engine.jpg": "写真：めむろ学 p.51",
+  "fire-station.jpg": "写真：めむろ学 p.51",
+  "drill.jpg": "写真：めむろ学 p.52",
+  "old-station.jpg": "写真：めむろ学 p.72",
+  "water-plant.jpg": "写真・図：めむろ学 p.99",
+  "waste-center.jpg": "図：めむろ学 p.108",
+  "gateball.jpg": "写真：めむろ学 p.143",
+  "ainu-culture.jpg": "写真：めむろ学 p.155",
+  "historic-photo.jpg": "写真：めむろ学 p.149"
+};
+const STORAGE_KEY = "memuro-tanken-progress-v1";
+const screens = [...document.querySelectorAll(".screen")];
+const $ = (id) => document.getElementById(id);
+
+let state = {
+  level: null,
+  queue: [],
+  index: 0,
+  score: 0,
+  wrong: [],
+  reviewMode: false,
+  sound: true,
+  locked: false,
+  currentChoices: []
+};
+
+function getLevelQuestions(level) {
+  return questions.filter((item) => item.level === level);
+}
+
+// 将来ランダム出題にする場合は、この関数の返り値をシャッフルします。
+function buildQuestionQueue(level) {
+  return getLevelQuestions(level).map((item) => questions.indexOf(item));
+}
+
+function shuffleChoices(item) {
+  const choices = item.choices.map((text, originalIndex) => ({ text, originalIndex }));
+  for (let index = choices.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [choices[index], choices[randomIndex]] = [choices[randomIndex], choices[index]];
+  }
+  const unchanged = choices.every((choice, index) => choice.originalIndex === index);
+  if (unchanged) [choices[0], choices[1]] = [choices[1], choices[0]];
+  return choices;
+}
+
+function showScreen(id) {
+  screens.forEach((screen) => { screen.hidden = screen.id !== id; });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function startQuiz(level, queue = buildQuestionQueue(level), reviewMode = false) {
+  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [] };
+  showScreen("quizScreen");
+  renderQuestion();
+  saveProgress();
+}
+
+function renderQuestion() {
+  const item = questions[state.queue[state.index]];
+  const total = state.queue.length;
+  const displayTotal = state.reviewMode ? total : 25;
+  $("questionCounter").innerHTML = `<ruby>第<rt>だい</rt></ruby>${state.index + 1}<ruby>問<rt>もん</rt></ruby> / ${displayTotal}<ruby>問<rt>もん</rt></ruby>`;
+  $("scoreChip").textContent = `★ ${state.score}`;
+  $("levelLabel").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）${state.reviewMode ? `・${kidHtml("復習")}` : ""}`;
+  setKidHtml($("questionText"), item.question);
+  $("progressBar").style.width = `${((state.index + 1) / total) * 100}%`;
+  document.querySelector(".progress-track").setAttribute("aria-valuemax", total);
+  document.querySelector(".progress-track").setAttribute("aria-valuenow", state.index + 1);
+  $("feedback").hidden = true;
+  state.locked = false;
+  state.currentChoices = shuffleChoices(item);
+
+  const main = document.querySelector(".question-main");
+  if (item.image) {
+    main.classList.remove("no-image");
+    $("imageFrame").hidden = false;
+    $("imageFrame").classList.add("is-covered");
+    $("imageFrame").classList.remove("is-revealed");
+    $("questionImage").src = `images/${item.image}`;
+    $("questionImage").alt = "もんだいの てがかりになる しゃしん";
+    setKidHtml($("imageCredit"), imageCredits[item.image] || "写真：地域学習書「めむろ学」");
+    $("questionImage").onerror = () => {
+      $("questionImage").onerror = null;
+      $("questionImage").src = "images/placeholder.jpg";
+      $("questionImage").alt = "めむろちょうの はたけと ひだかさんみゃくの イメージ（しゃしん じゅんびちゅう）";
+      setKidHtml($("imageCredit"), "写真準備中");
+    };
+  } else {
+    main.classList.add("no-image");
+    $("imageFrame").hidden = true;
+    $("imageFrame").classList.remove("is-covered", "is-revealed");
+    $("questionImage").removeAttribute("src");
+  }
+
+  $("choiceList").replaceChildren(...state.currentChoices.map((choice, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "choice-button";
+    button.innerHTML = `<span class="choice-letter">${String.fromCharCode(65 + index)}</span><span>${kidHtml(choice.text)}</span>`;
+    button.addEventListener("click", () => chooseAnswer(index));
+    return button;
+  }));
+}
+
+function chooseAnswer(selected) {
+  if (state.locked) return;
+  state.locked = true;
+  const item = questions[state.queue[state.index]];
+  const correct = state.currentChoices[selected].originalIndex === item.answer;
+  const buttons = [...document.querySelectorAll(".choice-button")];
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (state.currentChoices[index].originalIndex === item.answer) button.classList.add("correct");
+    if (index === selected && !correct) button.classList.add("wrong");
+  });
+  if (item.image) {
+    $("imageFrame").classList.remove("is-covered");
+    $("imageFrame").classList.add("is-revealed");
+  }
+
+  if (correct) {
+    state.score += 1;
+    if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-wave.png";
+    setKidHtml($("feedbackTitle"), ["やったね！", "すごい！", "いい調子！"][state.index % 3]);
+    playTone(660);
+  } else {
+    state.wrong.push(state.queue[state.index]);
+    if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-front.png";
+    setKidHtml($("feedbackTitle"), ["次はいけるよ！", "だいじょうぶ、発見できたね！"][state.index % 2]);
+    playTone(330);
+  }
+  $("scoreChip").textContent = `★ ${state.score}`;
+  $("feedbackText").innerHTML = `${kidHtml(item.explanation)}（${kidHtml(item.source)}）`;
+  $("feedback").hidden = false;
+  setTimeout(nextQuestion, 1800);
+}
+
+function nextQuestion() {
+  state.index += 1;
+  if (state.index < state.queue.length) {
+    renderQuestion();
+    saveProgress();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  localStorage.removeItem(STORAGE_KEY);
+  updateResumeButton();
+  showScreen("resultScreen");
+  const total = state.queue.length;
+  const passed = !state.reviewMode && total === 25 && state.score === 25;
+  $("resultCard").classList.toggle("fail", !passed);
+  $("resultScore").textContent = state.score;
+  document.querySelector(".score-display span").innerHTML = `/ ${total}<ruby>点<rt>てん</rt></ruby>`;
+  $("resultKicker").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）`;
+  setKidHtml($("resultTitle"), passed ? "たんけんクリア！" : state.reviewMode ? "復習できたね！" : "もう一回チャレンジ！");
+  $("resultSummary").textContent = passed
+    ? "25もん すべてせいかい！ めむろちょうの たんけんめいじんです。"
+    : `${total}もんちゅう ${state.score}もんせいかい。まちがいも、あたらしいはっけんへのいっぽだよ。`;
+  $("certificate").hidden = !passed;
+  $("certificateCourse").innerHTML = `${kidHtml(levelInfo[state.level].name)} ${kidHtml(levelInfo[state.level].label)}`;
+  $("reviewButton").hidden = state.wrong.length === 0;
+  $("reviewButton").textContent = `まちがいふくしゅう（${state.wrong.length}もん）`;
+  playTone(passed ? 880 : 440);
+}
+
+function saveProgress() {
+  if (!state.level || state.reviewMode) return;
+  const saved = {
+    level: state.level, queue: state.queue, index: state.index,
+    score: state.score, wrong: state.wrong
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  updateResumeButton();
+}
+
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!saved || !levelInfo[saved.level] || saved.index >= saved.queue.length) return;
+    state = { ...state, ...saved, reviewMode: false, locked: false };
+    showScreen("quizScreen");
+    renderQuestion();
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+function updateResumeButton() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { /* 破損時は非表示 */ }
+  $("resumeArea").hidden = !saved;
+  if (saved && levelInfo[saved.level]) {
+    $("resumeButton").innerHTML = `${kidHtml(levelInfo[saved.level].name)} <ruby>第<rt>だい</rt></ruby>${saved.index + 1}<ruby>問<rt>もん</rt></ruby>から`;
+  }
+}
+
+function goHome() {
+  showScreen("topScreen");
+  updateResumeButton();
+}
+
+function confirmQuit() {
+  if (window.confirm("ここまでの きろくを のこして、トップに もどりますか？")) goHome();
+}
+
+function playTone(frequency) {
+  if (!state.sound || !window.AudioContext) return;
+  const context = new AudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.05, context.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.12);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start();
+  oscillator.stop(context.currentTime + 0.12);
+}
+
+document.querySelectorAll(".level-card").forEach((button) => {
+  button.addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    startQuiz(button.dataset.level);
+  });
+});
+$("resumeButton").addEventListener("click", loadProgress);
+$("quitButton").addEventListener("click", confirmQuit);
+$("homeButton").addEventListener("click", goHome);
+$("resultHomeButton").addEventListener("click", goHome);
+$("retryButton").addEventListener("click", () => startQuiz(state.level));
+$("reviewButton").addEventListener("click", () => startQuiz(state.level, [...new Set(state.wrong)], true));
+$("soundButton").addEventListener("click", () => {
+  state.sound = !state.sound;
+  $("soundButton").setAttribute("aria-pressed", String(state.sound));
+  $("soundButton").setAttribute("aria-label", state.sound ? "こうかおんを きる" : "こうかおんを つける");
+  $("soundButton").textContent = state.sound ? "♪" : "×";
+});
+
+updateResumeButton();
+applyKidText();
+
+</script>
+</body>
+</html>
