@@ -1,0 +1,1080 @@
+{
+  "schemaVersion": 1,
+  "lastUpdated": "2026-06-30",
+  "sessionSize": 5,
+  "courses": [
+    {
+      "id": "beginner",
+      "title": "まちたんけん",
+      "level": "ビギナー",
+      "icon": "🗺️",
+      "description": "ばしょ・しぜん・くらし"
+    },
+    {
+      "id": "intermediate",
+      "title": "くらし・しごとたんけん",
+      "level": "チャレンジ",
+      "icon": "🚜",
+      "description": "しごと・安全・かんきょう"
+    },
+    {
+      "id": "advanced",
+      "title": "れきし・文化たんけん",
+      "level": "名人",
+      "icon": "🏑",
+      "description": "れきし・文化・ゲートボール"
+    }
+  ],
+  "questions": [
+    {
+      "id": "b01",
+      "course": "beginner",
+      "question": "芽室町があるのは、どの都道府県？",
+      "choices": [
+        "北海道",
+        "青森県",
+        "長野県"
+      ],
+      "answer": 0,
+      "explanation": "芽室町は北海道の十勝地方にあります。",
+      "source": "めむろ学 p.14–15",
+      "image": "memuro-map.jpg"
+    },
+    {
+      "id": "b02",
+      "course": "beginner",
+      "question": "芽室町がある平野は？",
+      "choices": [
+        "十勝平野",
+        "石狩平野",
+        "関東平野"
+      ],
+      "answer": 0,
+      "explanation": "芽室町は広い十勝平野にあります。",
+      "source": "めむろ学 p.14–15",
+      "image": "fields.jpg"
+    },
+    {
+      "id": "b03",
+      "course": "beginner",
+      "question": "芽室町の西に見える山なみは？",
+      "choices": [
+        "日高山脈",
+        "富士山",
+        "大雪山だけ"
+      ],
+      "answer": 0,
+      "explanation": "町の西側には日高山脈が広がります。",
+      "source": "めむろ学 p.14–17",
+      "image": "fields.jpg"
+    },
+    {
+      "id": "b04",
+      "course": "beginner",
+      "question": "芽室町の土地で多く見られるものは？",
+      "choices": [
+        "広い畑",
+        "高いビル",
+        "海岸"
+      ],
+      "answer": 0,
+      "explanation": "芽室町には広い畑がたくさんあります。",
+      "source": "めむろ学 p.16–19",
+      "image": "fields.jpg"
+    },
+    {
+      "id": "b05",
+      "course": "beginner",
+      "question": "芽室町にとなり合う大きな市は？",
+      "choices": [
+        "帯広市",
+        "札幌市",
+        "函館市"
+      ],
+      "answer": 0,
+      "explanation": "芽室町は帯広市にとなり合っています。",
+      "source": "めむろ学 p.14–15",
+      "image": "memuro-map.jpg"
+    },
+    {
+      "id": "b06",
+      "course": "beginner",
+      "question": "町の中心を通る鉄道の駅は？",
+      "choices": [
+        "芽室駅",
+        "釧路駅",
+        "旭川駅"
+      ],
+      "answer": 0,
+      "explanation": "JR根室本線の芽室駅があります。写真は開業したころの芽室駅です。",
+      "source": "めむろ学 p.72",
+      "image": "old-station.jpg"
+    },
+    {
+      "id": "b07",
+      "course": "beginner",
+      "question": "町の仕事を行う中心の建物は？",
+      "choices": [
+        "芽室町役場",
+        "水族館",
+        "空港"
+      ],
+      "answer": 0,
+      "explanation": "町役場では、くらしを支えるいろいろな仕事をします。",
+      "source": "めむろ学 p.20–23",
+      "image": "town-hall.jpg"
+    },
+    {
+      "id": "b08",
+      "course": "beginner",
+      "question": "本を借りたり調べたりする場所は？",
+      "choices": [
+        "図書館",
+        "消防署",
+        "交番"
+      ],
+      "answer": 0,
+      "explanation": "図書館では本や資料を利用できます。",
+      "source": "めむろ学 p.20–23",
+      "image": "library.jpg"
+    },
+    {
+      "id": "b09",
+      "course": "beginner",
+      "question": "芽室町を流れる川はどれ？",
+      "choices": [
+        "芽室川",
+        "信濃川",
+        "四万十川"
+      ],
+      "answer": 0,
+      "explanation": "町には十勝川、芽室川、美生川などが流れます。",
+      "source": "めむろ学 p.14–17",
+      "image": "memuro-river.jpg"
+    },
+    {
+      "id": "b10",
+      "course": "beginner",
+      "question": "芽室町は海に面している？",
+      "choices": [
+        "面していない",
+        "面している",
+        "島である"
+      ],
+      "answer": 0,
+      "explanation": "芽室町は北海道の内陸にあります。",
+      "source": "めむろ学 p.14–15",
+      "image": null
+    },
+    {
+      "id": "b11",
+      "course": "beginner",
+      "question": "芽室町の代表的な作物は？",
+      "choices": [
+        "スイートコーン",
+        "パイナップル",
+        "バナナ"
+      ],
+      "answer": 0,
+      "explanation": "スイートコーンは芽室町を代表する作物の一つです。",
+      "source": "めむろ学 p.26–31",
+      "image": "corn.jpg"
+    },
+    {
+      "id": "b12",
+      "course": "beginner",
+      "question": "じゃがいもの別のよび方は？",
+      "choices": [
+        "ばれいしょ",
+        "てんさい",
+        "小麦"
+      ],
+      "answer": 0,
+      "explanation": "ばれいしょは、じゃがいものことです。",
+      "source": "めむろ学 p.26–31",
+      "image": "potato.jpg"
+    },
+    {
+      "id": "b13",
+      "course": "beginner",
+      "question": "パンやめんの材料になる作物は？",
+      "choices": [
+        "小麦",
+        "小豆",
+        "ビート"
+      ],
+      "answer": 0,
+      "explanation": "小麦はパンやめんなどに加工されます。",
+      "source": "めむろ学 p.26–31",
+      "image": "wheat.jpg"
+    },
+    {
+      "id": "b14",
+      "course": "beginner",
+      "question": "砂糖の材料になる作物は？",
+      "choices": [
+        "てんさい（ビート）",
+        "たまねぎ",
+        "大豆"
+      ],
+      "answer": 0,
+      "explanation": "てんさいは砂糖の大切な原料です。",
+      "source": "めむろ学 p.26–35",
+      "image": "sugar-beet.jpg"
+    },
+    {
+      "id": "b15",
+      "course": "beginner",
+      "question": "芽室町の農業で中心となるのは？",
+      "choices": [
+        "畑作",
+        "真珠づくり",
+        "海の漁業"
+      ],
+      "answer": 0,
+      "explanation": "広い土地を生かした畑作がさかんです。",
+      "source": "めむろ学 p.26–37",
+      "image": "tractor.jpg"
+    },
+    {
+      "id": "b16",
+      "course": "beginner",
+      "question": "畑で作物を育てる仕事をする人は？",
+      "choices": [
+        "農家",
+        "駅員",
+        "船員"
+      ],
+      "answer": 0,
+      "explanation": "農家の人たちが工夫して作物を育てています。",
+      "source": "めむろ学 p.26–37",
+      "image": null
+    },
+    {
+      "id": "b17",
+      "course": "beginner",
+      "question": "火事のときに出動する車は？",
+      "choices": [
+        "消防車",
+        "ごみ収集車",
+        "トラクター"
+      ],
+      "answer": 0,
+      "explanation": "消防車は火を消すための道具を運びます。",
+      "source": "めむろ学 p.50–59",
+      "image": "fire-engine.jpg"
+    },
+    {
+      "id": "b18",
+      "course": "beginner",
+      "question": "急な病気やけがの人を運ぶ車は？",
+      "choices": [
+        "救急車",
+        "バス",
+        "除雪車"
+      ],
+      "answer": 0,
+      "explanation": "救急車が病院などへ安全に運びます。",
+      "source": "めむろ学 p.50–59",
+      "image": "ambulance.jpg"
+    },
+    {
+      "id": "b19",
+      "course": "beginner",
+      "question": "赤信号のとき、歩く人はどうする？",
+      "choices": [
+        "止まって待つ",
+        "急いで渡る",
+        "道路で遊ぶ"
+      ],
+      "answer": 0,
+      "explanation": "交通ルールを守ることが安全につながります。",
+      "source": "めむろ学 p.62–69",
+      "image": null
+    },
+    {
+      "id": "b20",
+      "course": "beginner",
+      "question": "ごみを決められた日に出すのはなぜ？",
+      "choices": [
+        "安全に集めるため",
+        "道に広げるため",
+        "鳥にあげるため"
+      ],
+      "answer": 0,
+      "explanation": "分別と収集日のルールが町をきれいにします。",
+      "source": "めむろ学 p.104–117",
+      "image": null
+    },
+    {
+      "id": "b21",
+      "course": "beginner",
+      "question": "使える物をくり返し使うことは？",
+      "choices": [
+        "リユース",
+        "リセット",
+        "リレー"
+      ],
+      "answer": 0,
+      "explanation": "リユースは、物をくり返し使うことです。",
+      "source": "めむろ学 p.115",
+      "image": "reuse.jpg"
+    },
+    {
+      "id": "b22",
+      "course": "beginner",
+      "question": "水道の水は、どこへ送られる？",
+      "choices": [
+        "家や学校",
+        "空の上",
+        "海の船だけ"
+      ],
+      "answer": 0,
+      "explanation": "きれいにした水が水道管で家や学校へ届きます。",
+      "source": "めむろ学 p.90–99",
+      "image": "water-plant.jpg"
+    },
+    {
+      "id": "b23",
+      "course": "beginner",
+      "question": "冬の道路で活やくする車は？",
+      "choices": [
+        "除雪車",
+        "消防車",
+        "田植え機"
+      ],
+      "answer": 0,
+      "explanation": "除雪車が雪をよけて道路を通りやすくします。",
+      "source": "めむろ学 p.70–77",
+      "image": "snowplow.jpg"
+    },
+    {
+      "id": "b24",
+      "course": "beginner",
+      "question": "町を地図で見ると分かることは？",
+      "choices": [
+        "場所や広がり",
+        "食べ物の味",
+        "音の大きさ"
+      ],
+      "answer": 0,
+      "explanation": "地図では場所、道、土地の使われ方などが分かります。",
+      "source": "めむろ学 p.14–23",
+      "image": null
+    },
+    {
+      "id": "b25",
+      "course": "beginner",
+      "question": "町を調べるよい方法は？",
+      "choices": [
+        "見学して話を聞く",
+        "思いつきだけで決める",
+        "何も見ない"
+      ],
+      "answer": 0,
+      "explanation": "見学やインタビューで本物の情報を集められます。",
+      "source": "めむろ学 学び方コーナー",
+      "image": null
+    },
+    {
+      "id": "i01",
+      "course": "intermediate",
+      "question": "芽室町の農地は町の面積のおよそ何％？",
+      "choices": [
+        "約42％",
+        "約4％",
+        "約90％"
+      ],
+      "answer": 0,
+      "explanation": "町の約42％が農地です。",
+      "source": "めむろ学 p.16・町公式「農業の概要」",
+      "image": "fields.jpg"
+    },
+    {
+      "id": "i02",
+      "course": "intermediate",
+      "question": "芽室町の気候の特ちょうは？",
+      "choices": [
+        "晴れる日が多い",
+        "一年中雨",
+        "一年中暑い"
+      ],
+      "answer": 0,
+      "explanation": "内陸性の気候で、日本有数の晴天率です。",
+      "source": "めむろ学 p.24–25",
+      "image": "fields.jpg"
+    },
+    {
+      "id": "i03",
+      "course": "intermediate",
+      "question": "作物を同じ畑で順番に変えて育てることは？",
+      "choices": [
+        "輪作",
+        "連休",
+        "分別"
+      ],
+      "answer": 0,
+      "explanation": "輪作は土を守り、病気などを防ぐ工夫です。",
+      "source": "めむろ学 p.30–37",
+      "image": "potato.jpg"
+    },
+    {
+      "id": "i04",
+      "course": "intermediate",
+      "question": "大きな農業機械を使う主な理由は？",
+      "choices": [
+        "広い畑で効率よく作業するため",
+        "音を出すため",
+        "道をせまくするため"
+      ],
+      "answer": 0,
+      "explanation": "広い畑を少ない時間で作業できます。",
+      "source": "めむろ学 p.30–37",
+      "image": "harvester.jpg"
+    },
+    {
+      "id": "i05",
+      "course": "intermediate",
+      "question": "農家が天気をよく調べるのはなぜ？",
+      "choices": [
+        "作業や育ち方に関係するから",
+        "駅名を決めるから",
+        "本を返すから"
+      ],
+      "answer": 0,
+      "explanation": "種まきや収穫などは天気と深く関わります。",
+      "source": "めむろ学 p.30–37",
+      "image": "tractor.jpg"
+    },
+    {
+      "id": "i06",
+      "course": "intermediate",
+      "question": "農作物を集め、販売も支える組織は？",
+      "choices": [
+        "JA",
+        "消防署",
+        "図書館"
+      ],
+      "answer": 0,
+      "explanation": "JAは農家の仕事や農産物の流通を支えます。",
+      "source": "めむろ学 p.34–39",
+      "image": "ja.jpg"
+    },
+    {
+      "id": "i07",
+      "course": "intermediate",
+      "question": "工場で農産物を加工するよさは？",
+      "choices": [
+        "食品にして届けられる",
+        "畑を海にできる",
+        "雪を降らせる"
+      ],
+      "answer": 0,
+      "explanation": "地域の作物をさまざまな食品に加工できます。",
+      "source": "めむろ学 p.40–49",
+      "image": "food-factory.jpg"
+    },
+    {
+      "id": "i08",
+      "course": "intermediate",
+      "question": "ビートから作られるものは？",
+      "choices": [
+        "砂糖",
+        "紙だけ",
+        "ガラス"
+      ],
+      "answer": 0,
+      "explanation": "製糖工場では、てんさいから砂糖を作ります。",
+      "source": "めむろ学 p.40–49",
+      "image": "sugar-beet.jpg"
+    },
+    {
+      "id": "i09",
+      "course": "intermediate",
+      "question": "店が品物をならべるときの工夫は？",
+      "choices": [
+        "買いやすく分類する",
+        "全部かくす",
+        "床に置く"
+      ],
+      "answer": 0,
+      "explanation": "種類や使い方で分け、選びやすくしています。",
+      "source": "めむろ学 p.78–89",
+      "image": "supermarket.jpg"
+    },
+    {
+      "id": "i10",
+      "course": "intermediate",
+      "question": "品物は店に来る前、何で運ばれることが多い？",
+      "choices": [
+        "トラック",
+        "救急車",
+        "消防車"
+      ],
+      "answer": 0,
+      "explanation": "道路を使って多くの品物が運ばれます。",
+      "source": "めむろ学 p.78–89",
+      "image": "delivery-truck.jpg"
+    },
+    {
+      "id": "i11",
+      "course": "intermediate",
+      "question": "地元で作った物を地元で食べることは？",
+      "choices": [
+        "地産地消",
+        "遠足",
+        "輪作"
+      ],
+      "answer": 0,
+      "explanation": "地産地消は地域の農業を身近に感じる取り組みです。",
+      "source": "めむろ学 p.26–49",
+      "image": "supermarket.jpg"
+    },
+    {
+      "id": "i12",
+      "course": "intermediate",
+      "question": "消防署でいつでも出動できるようにする工夫は？",
+      "choices": [
+        "交代で勤務する",
+        "夜はだれもいない",
+        "車を動かさない"
+      ],
+      "answer": 0,
+      "explanation": "いつ起きるか分からない火事や救急に備えます。",
+      "source": "めむろ学 p.50–59",
+      "image": "fire-station.jpg"
+    },
+    {
+      "id": "i13",
+      "course": "intermediate",
+      "question": "地域の消防団は、だれが参加する？",
+      "choices": [
+        "地域でくらす人たち",
+        "外国の船員だけ",
+        "ロボットだけ"
+      ],
+      "answer": 0,
+      "explanation": "仕事を持ちながら地域を守る人たちが活動します。",
+      "source": "めむろ学 p.58–61",
+      "image": "fire-engine.jpg"
+    },
+    {
+      "id": "i14",
+      "course": "intermediate",
+      "question": "防災訓練を行う目的は？",
+      "choices": [
+        "災害時に安全に動くため",
+        "速く走る競争のため",
+        "買い物のため"
+      ],
+      "answer": 0,
+      "explanation": "ふだんの練習が、いざという時の安全につながります。",
+      "source": "めむろ学 p.58–61",
+      "image": "drill.jpg"
+    },
+    {
+      "id": "i15",
+      "course": "intermediate",
+      "question": "110番につながるのは？",
+      "choices": [
+        "警察",
+        "消防・救急",
+        "図書館"
+      ],
+      "answer": 0,
+      "explanation": "事件や事故は110番、火事や救急は119番です。",
+      "source": "めむろ学 p.50–69",
+      "image": null
+    },
+    {
+      "id": "i16",
+      "course": "intermediate",
+      "question": "119番につながるのは？",
+      "choices": [
+        "消防・救急",
+        "警察",
+        "町の店"
+      ],
+      "answer": 0,
+      "explanation": "火事や救急のときは119番です。",
+      "source": "めむろ学 p.50–59",
+      "image": null
+    },
+    {
+      "id": "i17",
+      "course": "intermediate",
+      "question": "浄水場の大切な仕事は？",
+      "choices": [
+        "水をきれいにする",
+        "ごみを燃やす",
+        "電車を動かす"
+      ],
+      "answer": 0,
+      "explanation": "安全に飲める水にして送り出します。",
+      "source": "めむろ学 p.90–99",
+      "image": "water-plant.jpg"
+    },
+    {
+      "id": "i18",
+      "course": "intermediate",
+      "question": "水を大切にする行動は？",
+      "choices": [
+        "使わない時は止める",
+        "出しっぱなしにする",
+        "道路にまく"
+      ],
+      "answer": 0,
+      "explanation": "必要な分だけ使うことが節水になります。",
+      "source": "めむろ学 p.90–103",
+      "image": null
+    },
+    {
+      "id": "i19",
+      "course": "intermediate",
+      "question": "くりりんセンターで燃やすごみの熱は？",
+      "choices": [
+        "発電に利用する",
+        "そのまま捨てる",
+        "氷にする"
+      ],
+      "answer": 0,
+      "explanation": "ごみを燃やした熱を利用して電気を作ります。",
+      "source": "めむろ学 p.108",
+      "image": "waste-center.jpg"
+    },
+    {
+      "id": "i20",
+      "course": "intermediate",
+      "question": "ごみになる物を受け取らない4Rは？",
+      "choices": [
+        "リフューズ",
+        "リユース",
+        "リサイクル"
+      ],
+      "answer": 0,
+      "explanation": "Refuseは、不要な物をことわることです。",
+      "source": "めむろ学 p.115",
+      "image": "waste-center.jpg"
+    },
+    {
+      "id": "i21",
+      "course": "intermediate",
+      "question": "ごみそのものを減らす4Rは？",
+      "choices": [
+        "リデュース",
+        "リユース",
+        "リサイクル"
+      ],
+      "answer": 0,
+      "explanation": "Reduceは、ごみを減らす工夫です。",
+      "source": "めむろ学 p.115",
+      "image": null
+    },
+    {
+      "id": "i22",
+      "course": "intermediate",
+      "question": "資源を原料にもどして作り直すことは？",
+      "choices": [
+        "リサイクル",
+        "リフューズ",
+        "リデュース"
+      ],
+      "answer": 0,
+      "explanation": "資源を分別し、新しい製品の原料にします。",
+      "source": "めむろ学 p.104–117",
+      "image": "waste-center.jpg"
+    },
+    {
+      "id": "i23",
+      "course": "intermediate",
+      "question": "鉄道や道路が大切な理由は？",
+      "choices": [
+        "人や物を運ぶため",
+        "川を止めるため",
+        "畑を小さくするため"
+      ],
+      "answer": 0,
+      "explanation": "交通はくらしや産業をつないでいます。",
+      "source": "めむろ学 p.70–77",
+      "image": "old-station.jpg"
+    },
+    {
+      "id": "i24",
+      "course": "intermediate",
+      "question": "芽室町に多い食品工場と深い関係があるのは？",
+      "choices": [
+        "地元の農産物",
+        "海のサンゴ",
+        "南国の果物だけ"
+      ],
+      "answer": 0,
+      "explanation": "豊かな農産物を生かす食品製造が発達しています。",
+      "source": "めむろ学 p.40–49",
+      "image": null
+    },
+    {
+      "id": "i25",
+      "course": "intermediate",
+      "question": "くらしを良くする話し合いに大切なのは？",
+      "choices": [
+        "いろいろな人の意見を聞く",
+        "一人だけで決める",
+        "資料を見ない"
+      ],
+      "answer": 0,
+      "explanation": "資料と多くの意見をもとに考えることが大切です。",
+      "source": "めむろ学 学び方コーナー",
+      "image": null
+    },
+    {
+      "id": "a01",
+      "course": "advanced",
+      "question": "「芽室」の名のもとになったアイヌ語は？",
+      "choices": [
+        "メム・オロ",
+        "サッ・ポロ",
+        "トカプチだけ"
+      ],
+      "answer": 0,
+      "explanation": "メム・オロが転じて「芽室」になったとされます。",
+      "source": "めむろ学 p.142–159・町公式「芽室町について」",
+      "image": "ainu-place-name.jpg"
+    },
+    {
+      "id": "a02",
+      "course": "advanced",
+      "question": "「メム・オロ」に近い意味は？",
+      "choices": [
+        "泉や池から流れてくる川",
+        "大きな海",
+        "高い火山"
+      ],
+      "answer": 0,
+      "explanation": "川の源の泉や池から流れてくる川を表します。",
+      "source": "めむろ学 p.142–159",
+      "image": "spring-river.jpg"
+    },
+    {
+      "id": "a03",
+      "course": "advanced",
+      "question": "文字の記録で「芽室」が初めて登場した年は？",
+      "choices": [
+        "1800年",
+        "2000年",
+        "1600年"
+      ],
+      "answer": 0,
+      "explanation": "1800年の十勝川調査の地図に「メモロ」と記されました。",
+      "source": "めむろ学 p.160–169・町公式「町の紹介」",
+      "image": "old-map.jpg"
+    },
+    {
+      "id": "a04",
+      "course": "advanced",
+      "question": "芽室に戸長役場が置かれた年は？",
+      "choices": [
+        "1900年",
+        "1945年",
+        "2020年"
+      ],
+      "answer": 0,
+      "explanation": "1900年に戸長役場が置かれ、行政の中心となりました。",
+      "source": "めむろ学 p.160–169・町公式「町の紹介」",
+      "image": "old-office.jpg"
+    },
+    {
+      "id": "a05",
+      "course": "advanced",
+      "question": "芽室駅が開業した年は？",
+      "choices": [
+        "1907年",
+        "1807年",
+        "2007年"
+      ],
+      "answer": 0,
+      "explanation": "芽室駅は1907（明治40）年に開業しました。",
+      "source": "めむろ学 p.72",
+      "image": "old-station.jpg"
+    },
+    {
+      "id": "a06",
+      "course": "advanced",
+      "question": "芽室村が芽室町になった年は？",
+      "choices": [
+        "1942年",
+        "1906年",
+        "1992年"
+      ],
+      "answer": 0,
+      "explanation": "1942年に町制が施行され、芽室町になりました。",
+      "source": "めむろ学 p.99・町の歴史資料",
+      "image": "old-station.jpg"
+    },
+    {
+      "id": "a07",
+      "course": "advanced",
+      "question": "昔の道具や町の歩みを学べる施設は？",
+      "choices": [
+        "ふるさと歴史館ねんりん",
+        "空港",
+        "水族館"
+      ],
+      "answer": 0,
+      "explanation": "ねんりんでは芽室の歴史やくらしを学べます。",
+      "source": "めむろ学 p.160–177",
+      "image": "nenrin.jpg"
+    },
+    {
+      "id": "a08",
+      "course": "advanced",
+      "question": "北海道の先住民族は？",
+      "choices": [
+        "アイヌ民族",
+        "マオリ民族",
+        "サーミ民族"
+      ],
+      "answer": 0,
+      "explanation": "アイヌ民族は独自の言語や文化を育んできました。",
+      "source": "めむろ学 p.142–159",
+      "image": "ainu-culture.jpg"
+    },
+    {
+      "id": "a09",
+      "course": "advanced",
+      "question": "アイヌの人々が大切にしてきたものは？",
+      "choices": [
+        "自然とのつながり",
+        "大量のビル",
+        "海底トンネルだけ"
+      ],
+      "answer": 0,
+      "explanation": "自然の中のさまざまなものにカムイを感じてきました。",
+      "source": "めむろ学 p.142–159",
+      "image": "ainu-culture.jpg"
+    },
+    {
+      "id": "a10",
+      "course": "advanced",
+      "question": "アイヌ語で神を表す言葉は？",
+      "choices": [
+        "カムイ",
+        "コタン",
+        "モシリ"
+      ],
+      "answer": 0,
+      "explanation": "カムイは神や、人の力をこえた存在を表します。",
+      "source": "めむろ学 p.148–153",
+      "image": null
+    },
+    {
+      "id": "a11",
+      "course": "advanced",
+      "question": "アイヌ語で集落を表す言葉は？",
+      "choices": [
+        "コタン",
+        "カムイ",
+        "イオマンテ"
+      ],
+      "answer": 0,
+      "explanation": "コタンは人々がくらす集落です。",
+      "source": "めむろ学 p.142–159",
+      "image": "kotan.jpg"
+    },
+    {
+      "id": "a12",
+      "course": "advanced",
+      "question": "アイヌ文化を学ぶとき大切な姿勢は？",
+      "choices": [
+        "敬意をもって正しく知る",
+        "決めつける",
+        "昔だけのものとする"
+      ],
+      "answer": 0,
+      "explanation": "今も受けつがれる文化として敬意をもって学びます。",
+      "source": "めむろ学 p.142–159",
+      "image": null
+    },
+    {
+      "id": "a13",
+      "course": "advanced",
+      "question": "芽室町で生まれたスポーツは？",
+      "choices": [
+        "ゲートボール",
+        "野球",
+        "ラグビー"
+      ],
+      "answer": 0,
+      "explanation": "ゲートボールは芽室町が発祥の地です。",
+      "source": "めむろ学 p.140–143",
+      "image": "gateball.jpg"
+    },
+    {
+      "id": "a14",
+      "course": "advanced",
+      "question": "ゲートボールが考案されたのは、いつごろ？",
+      "choices": [
+        "第二次世界大戦後",
+        "江戸時代の初め",
+        "縄文時代"
+      ],
+      "answer": 0,
+      "explanation": "戦後、子どもたちが楽しめるスポーツとして考案されました。",
+      "source": "めむろ学 p.140–143",
+      "image": "gateball.jpg"
+    },
+    {
+      "id": "a15",
+      "course": "advanced",
+      "question": "ゲートボールでボールを通すものは？",
+      "choices": [
+        "ゲート",
+        "ゴールネット",
+        "バスケット"
+      ],
+      "answer": 0,
+      "explanation": "スティックで打ち、決められたゲートを通します。",
+      "source": "めむろ学 p.140–143",
+      "image": "gateball.jpg"
+    },
+    {
+      "id": "a16",
+      "course": "advanced",
+      "question": "ゲートボールは主にどんな競技？",
+      "choices": [
+        "チームで協力する競技",
+        "一人だけの水泳",
+        "雪上の競技だけ"
+      ],
+      "answer": 0,
+      "explanation": "仲間と作戦を考えながら進めるチーム競技です。",
+      "source": "めむろ学 p.140–143",
+      "image": "gateball.jpg"
+    },
+    {
+      "id": "a17",
+      "course": "advanced",
+      "question": "地域の伝統を未来へつなぐ方法は？",
+      "choices": [
+        "学び、伝え、参加する",
+        "忘れる",
+        "資料を捨てる"
+      ],
+      "answer": 0,
+      "explanation": "知ること、体験すること、伝えることが継承につながります。",
+      "source": "めむろ学 p.178–191",
+      "image": "taiko.jpg"
+    },
+    {
+      "id": "a18",
+      "course": "advanced",
+      "question": "芽室町の郷土芸能の一つは？",
+      "choices": [
+        "メムオロ太鼓",
+        "阿波おどりだけ",
+        "ねぶただけ"
+      ],
+      "answer": 0,
+      "explanation": "メムオロ太鼓は地域で受けつがれる郷土芸能です。",
+      "source": "めむろ学 p.188–191",
+      "image": "memuoro-taiko.jpg"
+    },
+    {
+      "id": "a19",
+      "course": "advanced",
+      "question": "昔の町の様子を調べる資料は？",
+      "choices": [
+        "古い写真や地図",
+        "今日の天気だけ",
+        "うわさだけ"
+      ],
+      "answer": 0,
+      "explanation": "写真、地図、年表、聞き取りを比べると変化が分かります。",
+      "source": "めむろ学 p.160–177",
+      "image": "historic-photo.jpg"
+    },
+    {
+      "id": "a20",
+      "course": "advanced",
+      "question": "昔と今を比べるとき大切なのは？",
+      "choices": [
+        "同じ場所や項目で比べる",
+        "一つだけ見る",
+        "想像だけで決める"
+      ],
+      "answer": 0,
+      "explanation": "比べる条件をそろえると変化を見つけやすくなります。",
+      "source": "めむろ学 学び方コーナー",
+      "image": null
+    },
+    {
+      "id": "a21",
+      "course": "advanced",
+      "question": "開拓が進む前から北海道にくらしていた人々は？",
+      "choices": [
+        "アイヌの人々",
+        "宇宙飛行士",
+        "南極観測隊"
+      ],
+      "answer": 0,
+      "explanation": "アイヌの人々は長く北海道で文化を築いてきました。",
+      "source": "めむろ学 p.142–169",
+      "image": null
+    },
+    {
+      "id": "a22",
+      "course": "advanced",
+      "question": "鉄道が開通して町に起きた変化は？",
+      "choices": [
+        "人や物が行き来しやすくなった",
+        "川が消えた",
+        "山がなくなった"
+      ],
+      "answer": 0,
+      "explanation": "鉄道は町の発展や物の輸送に大きく関わりました。",
+      "source": "めむろ学 p.70–77・p.160–177",
+      "image": "old-station.jpg"
+    },
+    {
+      "id": "a23",
+      "course": "advanced",
+      "question": "上水道が芽室町にできた年は？",
+      "choices": [
+        "1958年",
+        "1858年",
+        "2008年"
+      ],
+      "answer": 0,
+      "explanation": "年表には1958年に上水道ができたとあります。",
+      "source": "めむろ学 p.99",
+      "image": "water-plant.jpg"
+    },
+    {
+      "id": "a24",
+      "course": "advanced",
+      "question": "地域の歴史を聞き取る相手としてよいのは？",
+      "choices": [
+        "長く地域にくらす人",
+        "だれにも聞かない",
+        "町を知らない人だけ"
+      ],
+      "answer": 0,
+      "explanation": "体験した人の話は、資料と合わせて大切な手がかりになります。",
+      "source": "めむろ学 学び方コーナー",
+      "image": null
+    },
+    {
+      "id": "a25",
+      "course": "advanced",
+      "question": "地域文化を調べた後にするとよいことは？",
+      "choices": [
+        "分かったことを発信する",
+        "自分だけでかくす",
+        "資料をなくす"
+      ],
+      "answer": 0,
+      "explanation": "まとめて伝えることで、文化を知る人が増えます。",
+      "source": "めむろ学 p.188–191",
+      "image": null
+    }
+  ]
+}
