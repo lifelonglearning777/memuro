@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- ============================================================
-  まちるだいすけと めむろたんけん (Phase 4・1ファイル完結版)
+  まちるだいすけと めむろたんけん (Phase 5・1ファイル完結版)
   この1ファイルに 見た目(CSS)・問題データ・ふりがな辞書・
   プログラムのすべてが入っています。写真は images フォルダ、
   オフライン対応は sw.js / manifest.webmanifest を使います。
@@ -487,6 +487,58 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
 .badge-card small { color: #667; }
 .badge-card.locked { filter: grayscale(1); opacity: .62; }
 
+/* ---- Phase 5: けいけんち・カレンダー ---- */
+.xp-row { display: flex; align-items: center; gap: 10px; max-width: 720px; margin: 2px auto 6px; padding: 0 6px; }
+.xp-level { color: var(--grass-dark); font-size: .95rem; white-space: nowrap; }
+.xp-bar { flex: 1; height: 12px; border-radius: 999px; background: #e6e2cd; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,.12); }
+.xp-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--grass), #ffd84d); transition: width .5s ease; }
+.xp-next { font-size: .78rem; font-weight: 700; color: #7a6410; white-space: nowrap; }
+.level-up-note { margin: 6px 0 0; font-weight: 700; color: #b07a00; }
+
+.calendar-title { margin: 14px 0 6px; font-size: 1rem; }
+.stamp-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 430px; }
+.stamp-calendar .cal-head { text-align: center; font-size: .7rem; font-weight: 700; color: #667; }
+.stamp-calendar .cal-day {
+  min-height: 34px; display: grid; place-items: center; border-radius: 9px;
+  background: #f6f4e8; font-size: .78rem; color: #556;
+}
+.stamp-calendar .cal-day.stamped { background: #ffe9a3; font-size: 1rem; }
+.stamp-calendar .cal-day.today { outline: 2px solid var(--grass-dark); }
+.stamp-calendar .cal-day.empty { background: transparent; }
+
+/* ---- Phase 5: 1画面に収めるコンパクト表示(Chromebook想定) ---- */
+@media (min-width: 860px) and (max-height: 880px) {
+  main { padding: 4px 18px 8px; align-items: start; }
+  .app-header { height: 50px; }
+  .hero { min-height: 128px; margin: 2px auto 8px; padding: 8px 22px; }
+  .hero-center { padding: 8px clamp(16px, 3vw, 28px); }
+  .hero-mascot { width: 84px; height: 84px; }
+  .eyebrow { font-size: .8rem; margin-bottom: 2px; }
+  h1 { font-size: clamp(1.3rem, 3vw, 1.9rem); }
+  .rank-title { margin: 0 4px 4px; font-size: .92rem; }
+  .xp-row { margin: 0 auto 4px; }
+  .daily-card { margin: 6px auto 2px; padding: 8px 14px; }
+  .daily-info strong { font-size: .95rem; }
+  .daily-button { min-height: 44px; padding: 6px 14px; }
+  .badge-link-row { margin: 4px 0 0; }
+  .badge-link { min-height: 38px; padding: 4px 14px; font-size: .84rem; }
+  .level-grid { gap: 10px; }
+  .level-card { padding: 12px 14px; }
+  .weak-area { margin: 8px auto 0; padding: 8px 14px; }
+  .weak-button { min-height: 44px; padding: 6px 12px; }
+  .teacher-link-row { margin: 4px 6px 0; }
+  .teacher-link { padding: 4px; }
+
+  /* クイズ画面 */
+  .question-card { padding: 10px 16px; }
+  .image-frame { height: clamp(96px, 17vh, 150px); }
+  #questionText { font-size: clamp(1.05rem, 2.3vw, 1.5rem); }
+  .choice-list { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .choice-button { min-height: 56px; }
+  .read-button { margin-top: 4px; min-height: 38px; padding: 4px 12px; font-size: .85rem; }
+  .feedback { padding: 8px 12px; }
+}
+
 </style>
 </head>
 <body>
@@ -520,6 +572,12 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
       </div>
 
       <p id="rankTitle" class="rank-title" aria-live="polite"></p>
+
+      <div class="xp-row" aria-label="けいけんち">
+        <strong id="xpLevel" class="xp-level"></strong>
+        <div class="xp-bar" aria-hidden="true"><div id="xpFill" class="xp-fill"></div></div>
+        <span id="xpNext" class="xp-next"></span>
+      </div>
 
       <div id="dailyCard" class="daily-card">
         <div class="daily-info">
@@ -617,6 +675,7 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
         <h2 id="resultTitle"></h2>
         <div class="score-display"><strong id="resultScore">0</strong><span>/ 25点</span></div>
         <p id="resultSummary"></p>
+          <p id="levelUpNote" class="level-up-note" hidden></p>
         <div id="certificate" class="certificate" hidden>
           <p>認 定 証</p>
           <strong id="certificateCourse"></strong>
@@ -639,6 +698,8 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
         <span id="badgeCount" class="badge-count"></span>
       </div>
       <p class="teacher-note">たんけんを がんばると、バッジが あつまるよ。</p>
+      <h3 class="calendar-title">🌞 こんげつの スタンプ</h3>
+      <div id="stampCalendar" class="stamp-calendar" aria-label="こんげつの きろく"></div>
       <div id="badgeGrid" class="badge-grid"></div>
     </section>
 
@@ -865,10 +926,10 @@ function loadRecords() {
   try {
     const saved = JSON.parse(localStorage.getItem(RECORDS_KEY));
     if (saved && typeof saved === "object") {
-      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {}, daily: saved.daily || { dates: [] } };
+      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {}, daily: saved.daily || { dates: [] }, xp: saved.xp || 0 };
     }
   } catch { /* 破損時は初期化 */ }
-  return { best: {}, perfect: {}, maxCombo: 0, weak: {}, daily: { dates: [] } };
+  return { best: {}, perfect: {}, maxCombo: 0, weak: {}, daily: { dates: [] }, xp: 0 };
 }
 function saveRecords() { localStorage.setItem(RECORDS_KEY, JSON.stringify(records)); }
 function weakQueue(level) {
@@ -945,7 +1006,7 @@ function showScreen(id) {
 }
 
 function startQuiz(level, queue = buildQuestionQueue(level), reviewMode = false) {
-  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [], combo: 0, dailyMode: false };
+  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [], combo: 0, dailyMode: false, xpAtStart: records.xp || 0 };
   $("comboChip").hidden = true;
   showScreen("quizScreen");
   renderQuestion();
@@ -1031,6 +1092,7 @@ function chooseAnswer(selected) {
     playTone(660);
     state.combo = (state.combo || 0) + 1;
     removeWeak(item.level, item.question);
+    addXp(10);
     if (state.combo >= 2) {
       $("comboChip").hidden = false;
       $("comboChip").textContent = `🔥 ${state.combo}れんぞく！`;
@@ -1085,7 +1147,7 @@ function showResult() {
   $("reviewButton").textContent = `まちがいふくしゅう（${state.wrong.length}もん）`;
   if (!state.reviewMode && total === 25) {
     if (state.score > (records.best[state.level] || 0)) records.best[state.level] = state.score;
-    if (state.score === 25) records.perfect[state.level] = true;
+    if (state.score === 25) { if (!records.perfect[state.level]) addXp(50); records.perfect[state.level] = true; }
     saveRecords();
   }
   if (passed) {
@@ -1100,14 +1162,26 @@ function showResult() {
     if (!records.daily.dates.includes(todayKey())) {
       records.daily.dates.push(todayKey());
       if (records.daily.dates.length > 400) records.daily.dates = records.daily.dates.slice(-400);
+      addXp(20);
       saveRecords();
       launchConfetti(24);
     }
+  }
+  const newLevel = levelOf(records.xp || 0);
+  const leveledUp = newLevel > levelOf(state.xpAtStart || 0);
+  $("levelUpNote").hidden = !leveledUp;
+  if (leveledUp) {
+    $("levelUpNote").textContent = `🎉 レベルアップ！ いま Lv.${newLevel}`;
+    launchConfetti(26);
   }
   playTone(passed ? 880 : 440);
 }
 
 /* ---- トップ画面のがんばり表示 ---- */
+/* ---- けいけんちとレベル: 正解+10 / デイリー初クリア+20 / 全問正解+50 ---- */
+function levelOf(xp) { return Math.floor(xp / 100) + 1; }
+function addXp(amount) { records.xp = (records.xp || 0) + amount; saveRecords(); }
+
 function todayKey(offsetDays = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -1154,7 +1228,38 @@ const badgeDefs = [
   { icon: "🏆", name: "20にち たっせい", desc: "きょうの ちょうせんを 20にち クリア", check: () => dailyDates().length >= 20 }
 ];
 function earnedBadgeCount() { return badgeDefs.filter((b) => b.check(records)).length; }
+function renderStampCalendar() {
+  const wrap = $("stampCalendar");
+  wrap.replaceChildren();
+  const heads = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"];
+  for (const h of heads) {
+    const cell = document.createElement("div");
+    cell.className = "cal-head";
+    cell.textContent = h;
+    wrap.appendChild(cell);
+  }
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const first = new Date(year, month, 1).getDay();
+  const days = new Date(year, month + 1, 0).getDate();
+  const stamped = new Set(dailyDates());
+  for (let blank = 0; blank < first; blank += 1) {
+    const cell = document.createElement("div");
+    cell.className = "cal-day empty";
+    wrap.appendChild(cell);
+  }
+  for (let day = 1; day <= days; day += 1) {
+    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const cell = document.createElement("div");
+    cell.className = "cal-day" + (stamped.has(key) ? " stamped" : "") + (key === todayKey() ? " today" : "");
+    cell.textContent = stamped.has(key) ? "🌞" : String(day);
+    wrap.appendChild(cell);
+  }
+}
+
 function renderBadges() {
+  renderStampCalendar();
   $("badgeCount").textContent = `あつめた バッジ：${earnedBadgeCount()} / ${badgeDefs.length}`;
   $("badgeGrid").replaceChildren(...badgeDefs.map((badge) => {
     const earned = badge.check(records);
@@ -1172,6 +1277,10 @@ function renderTopScreen() {
     ? `きょうは クリア！${streak >= 1 ? ` 🔥${streak}にち れんぞく` : ""}`
     : `まいにち かわる 5もん。${streak > 0 ? `いま 🔥${streak}にち れんぞく！` : "ぜんコースから しゅつだい！"}`;
   $("dailyButton").textContent = doneToday ? "もういちど あそぶ" : "5もんに ちょうせん！";
+  const xp = records.xp || 0;
+  $("xpLevel").textContent = `⭐ Lv.${levelOf(xp)}`;
+  $("xpFill").style.width = `${xp % 100}%`;
+  $("xpNext").textContent = `つぎのレベルまで あと${100 - (xp % 100)}`;
   $("badgeLinkButton").textContent = `🏅 バッジずかん（${earnedBadgeCount()} / ${badgeDefs.length}）`;
   const levels = Object.keys(levelInfo);
   const perfectCount = levels.filter((level) => records.perfect[level]).length;
