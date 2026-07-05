@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- ============================================================
-  まちるだいすけと めむろたんけん (Phase 3・1ファイル完結版)
+  まちるだいすけと めむろたんけん (Phase 4・1ファイル完結版)
   この1ファイルに 見た目(CSS)・問題データ・ふりがな辞書・
   プログラムのすべてが入っています。写真は images フォルダ、
   オフライン対応は sw.js / manifest.webmanifest を使います。
@@ -439,6 +439,54 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
   .teacher-head button { display: none; }
 }
 
+/* ---- Phase 4: あそびごころ ---- */
+.mascot-button { background: none; border: 0; padding: 0; cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; }
+.mascot-button:focus-visible { outline: 3px solid #1667c1; outline-offset: 4px; border-radius: 20px; }
+.hero-mascot.is-bouncing { animation: mascot-bounce .55s ease; }
+@keyframes mascot-bounce {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(-16px) rotate(-4deg); }
+  65% { transform: translateY(2px) rotate(3deg); }
+  100% { transform: translateY(0); }
+}
+.mascot-bubble {
+  position: absolute; left: 50%; top: -14px; transform: translateX(-50%);
+  background: #fff; color: #234; border-radius: 14px; padding: 7px 12px;
+  font-size: .85rem; font-weight: 700; white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(30,60,30,.25); animation: bubble-pop .25s ease;
+}
+.mascot-bubble::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
+  border: 7px solid transparent; border-top-color: #fff; border-bottom: 0; }
+@keyframes bubble-pop { from { transform: translateX(-50%) scale(.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hero-mascot.is-bouncing, .mascot-bubble { animation: none; } }
+
+.daily-card {
+  margin: 12px auto 4px; max-width: 720px; padding: 12px 16px;
+  background: linear-gradient(120deg, #fff4c2, #ffe9a3); border-radius: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 4px 0 rgba(140,110,20,.18);
+}
+.daily-info { display: grid; gap: 2px; }
+.daily-info strong { font-size: 1.05rem; }
+.daily-info span { font-size: .84rem; font-weight: 600; color: #6d5a12; }
+.daily-button {
+  min-height: 48px; padding: 8px 18px; border: 0; border-radius: 14px;
+  background: var(--grass-dark); color: #fff; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 4px 0 #225329;
+}
+.daily-button:active { transform: translateY(2px); box-shadow: 0 2px 0 #225329; }
+
+.badge-link-row { text-align: center; margin: 10px 0 0; }
+.badge-link { background: #fff; border: 2px solid #e3d18a; border-radius: 999px; min-height: 44px; padding: 6px 18px; cursor: pointer; font-size: .92rem; }
+.badge-screen { background: #fff; border-radius: 18px; padding: 16px 20px; }
+.badge-count { font-weight: 700; color: #6d5a12; }
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+.badge-card { border: 2px solid #e8e2c8; border-radius: 16px; padding: 12px; display: grid; gap: 3px; background: #fffdf4; }
+.badge-card .badge-icon { font-size: 1.9rem; }
+.badge-card strong { font-size: .95rem; }
+.badge-card small { color: #667; }
+.badge-card.locked { filter: grayscale(1); opacity: .62; }
+
 </style>
 </head>
 <body>
@@ -457,7 +505,10 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
     <section id="topScreen" class="screen top-screen">
       <div class="hero">
         <div class="hero-center">
-          <img class="hero-mascot" src="images/machiru-wave.png" alt="手を上げる まちるだいすけ">
+          <button id="mascotButton" class="mascot-button" type="button" aria-label="まちるだいすけに タッチ">
+            <img class="hero-mascot" src="images/machiru-wave.png" alt="手を上げる まちるだいすけ">
+            <span id="mascotBubble" class="mascot-bubble" role="status" hidden></span>
+          </button>
           <h1>
             <span class="hero-title-main">めむろ<ruby>検定<rt>けんてい</rt></ruby></span>
           </h1>
@@ -469,6 +520,16 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
       </div>
 
       <p id="rankTitle" class="rank-title" aria-live="polite"></p>
+
+      <div id="dailyCard" class="daily-card">
+        <div class="daily-info">
+          <strong>🌞 きょうの ちょうせん</strong>
+          <span id="dailyStatus"></span>
+        </div>
+        <button id="dailyButton" class="daily-button" type="button">5もんに ちょうせん！</button>
+      </div>
+
+      <p class="badge-link-row"><button id="badgeLinkButton" class="badge-link" type="button">🏅 バッジずかん</button></p>
 
       <div class="level-grid" aria-label="コースをえらぶ">
         <button class="level-card beginner" type="button" data-level="beginner">
@@ -569,6 +630,16 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
           <button id="resultHomeButton" class="secondary-button" type="button">トップに戻る</button>
         </div>
       </div>
+    </section>
+
+    <section id="badgeScreen" class="screen badge-screen" hidden>
+      <div class="teacher-head">
+        <button id="badgeBackButton" class="teacher-btn" type="button">← もどる</button>
+        <h2>🏅 バッジずかん</h2>
+        <span id="badgeCount" class="badge-count"></span>
+      </div>
+      <p class="teacher-note">たんけんを がんばると、バッジが あつまるよ。</p>
+      <div id="badgeGrid" class="badge-grid"></div>
     </section>
 
     <section id="teacherScreen" class="screen teacher-screen" hidden>
@@ -794,10 +865,10 @@ function loadRecords() {
   try {
     const saved = JSON.parse(localStorage.getItem(RECORDS_KEY));
     if (saved && typeof saved === "object") {
-      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {} };
+      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {}, daily: saved.daily || { dates: [] } };
     }
   } catch { /* 破損時は初期化 */ }
-  return { best: {}, perfect: {}, maxCombo: 0, weak: {} };
+  return { best: {}, perfect: {}, maxCombo: 0, weak: {}, daily: { dates: [] } };
 }
 function saveRecords() { localStorage.setItem(RECORDS_KEY, JSON.stringify(records)); }
 function weakQueue(level) {
@@ -874,7 +945,7 @@ function showScreen(id) {
 }
 
 function startQuiz(level, queue = buildQuestionQueue(level), reviewMode = false) {
-  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [], combo: 0 };
+  state = { ...state, level, queue, index: 0, score: 0, wrong: [], reviewMode, locked: false, currentChoices: [], combo: 0, dailyMode: false };
   $("comboChip").hidden = true;
   showScreen("quizScreen");
   renderQuestion();
@@ -887,7 +958,9 @@ function renderQuestion() {
   const displayTotal = state.reviewMode ? total : 25;
   $("questionCounter").innerHTML = `<ruby>第<rt>だい</rt></ruby>${state.index + 1}<ruby>問<rt>もん</rt></ruby> / ${displayTotal}<ruby>問<rt>もん</rt></ruby>`;
   $("scoreChip").textContent = `★ ${state.score}`;
-  $("levelLabel").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）${state.reviewMode ? `・${kidHtml("復習")}` : ""}`;
+  $("levelLabel").innerHTML = state.dailyMode
+    ? "🌞 きょうの ちょうせん"
+    : `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）${state.reviewMode ? `・${kidHtml("復習")}` : ""}`;
   const questionElement = $("questionText");
   setKidHtml(questionElement, item.question);
   questionElement.classList.toggle("is-long", item.question.length >= 22);
@@ -957,7 +1030,7 @@ function chooseAnswer(selected) {
     setKidHtml($("feedbackTitle"), ["やったね！", "すごい！", "いい調子！"][state.index % 3]);
     playTone(660);
     state.combo = (state.combo || 0) + 1;
-    removeWeak(state.level, item.question);
+    removeWeak(item.level, item.question);
     if (state.combo >= 2) {
       $("comboChip").hidden = false;
       $("comboChip").textContent = `🔥 ${state.combo}れんぞく！`;
@@ -971,7 +1044,7 @@ function chooseAnswer(selected) {
     playTone(330);
     state.combo = 0;
     $("comboChip").hidden = true;
-    addWeak(state.level, item.question);
+    addWeak(item.level, item.question);
   }
   $("scoreChip").textContent = `★ ${state.score}`;
   $("feedbackText").innerHTML = `${kidHtml(item.explanation)}（${kidHtml(item.source)}）`;
@@ -1020,11 +1093,86 @@ function showResult() {
     $("certificateDate").innerHTML = todayHtml();
     launchConfetti(44);
   }
+  if (state.dailyMode) {
+    $("resultKicker").textContent = "🌞 きょうの ちょうせん";
+    setKidHtml($("resultTitle"), state.score === total ? "きょうも クリア！" : "ちょうせん おわり！");
+    records.daily = records.daily || { dates: [] };
+    if (!records.daily.dates.includes(todayKey())) {
+      records.daily.dates.push(todayKey());
+      if (records.daily.dates.length > 400) records.daily.dates = records.daily.dates.slice(-400);
+      saveRecords();
+      launchConfetti(24);
+    }
+  }
   playTone(passed ? 880 : 440);
 }
 
 /* ---- トップ画面のがんばり表示 ---- */
+function todayKey(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function dailyDates() { return (records.daily && records.daily.dates) || []; }
+function dailyDoneToday() { return dailyDates().includes(todayKey()); }
+function dailyStreak() {
+  const dates = new Set(dailyDates());
+  let streak = 0;
+  let offset = dates.has(todayKey()) ? 0 : -1;
+  while (dates.has(todayKey(offset))) { streak += 1; offset -= 1; }
+  return streak;
+}
+function dailyQueue() {
+  // 日付から決まる乱数で、全コースから毎日ちがう5問を選ぶ(その日じゅうは全員同じ5問)
+  let seed = Number(todayKey().replace(/-/g, ""));
+  const rand = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+  const pool = questions.map((_, index) => index);
+  const picks = [];
+  for (let k = 0; k < 5 && pool.length > 0; k += 1) {
+    picks.push(pool.splice(Math.floor(rand() * pool.length), 1)[0]);
+  }
+  return picks;
+}
+function startDailyChallenge() {
+  const queue = dailyQueue();
+  startQuiz(questions[queue[0]].level, queue, true);
+  state.dailyMode = true;
+  renderQuestion();
+}
+
+/* ---- バッジずかん ---- */
+const badgeDefs = [
+  { icon: "👟", name: "たんけんデビュー", desc: "どれかの コースを さいごまで やった", check: (r) => Object.keys(r.best).length > 0 },
+  { icon: "🗺️", name: "まちはかせ", desc: "まちたんけんで ぜんもん せいかい", check: (r) => !!r.perfect.beginner },
+  { icon: "🚜", name: "くらしはかせ", desc: "くらし・しごとたんけんで ぜんもん せいかい", check: (r) => !!r.perfect.intermediate },
+  { icon: "🥍", name: "れきしはかせ", desc: "れきし・ぶんかたんけんで ぜんもん せいかい", check: (r) => !!r.perfect.advanced },
+  { icon: "👑", name: "でんせつの たんけんめいじん", desc: "3つの コース ぜんぶで ぜんもん せいかい", check: (r) => ["beginner", "intermediate", "advanced"].every((l) => r.perfect[l]) },
+  { icon: "🔥", name: "5れんぞく！", desc: "5もん れんぞくで せいかい した", check: (r) => r.maxCombo >= 5 },
+  { icon: "🌋", name: "10れんぞく！！", desc: "10もん れんぞくで せいかい した", check: (r) => r.maxCombo >= 10 },
+  { icon: "🌞", name: "きょうの ちょうせん デビュー", desc: "きょうの ちょうせんを はじめて クリア", check: () => dailyDates().length >= 1 },
+  { icon: "📅", name: "5にち たっせい", desc: "きょうの ちょうせんを 5にち クリア", check: () => dailyDates().length >= 5 },
+  { icon: "🏆", name: "20にち たっせい", desc: "きょうの ちょうせんを 20にち クリア", check: () => dailyDates().length >= 20 }
+];
+function earnedBadgeCount() { return badgeDefs.filter((b) => b.check(records)).length; }
+function renderBadges() {
+  $("badgeCount").textContent = `あつめた バッジ：${earnedBadgeCount()} / ${badgeDefs.length}`;
+  $("badgeGrid").replaceChildren(...badgeDefs.map((badge) => {
+    const earned = badge.check(records);
+    const card = document.createElement("div");
+    card.className = "badge-card" + (earned ? "" : " locked");
+    card.innerHTML = `<span class="badge-icon">${earned ? badge.icon : "🔒"}</span><strong>${earned ? badge.name : "？？？"}</strong><small>${badge.desc}</small>`;
+    return card;
+  }));
+}
+
 function renderTopScreen() {
+  const doneToday = dailyDoneToday();
+  const streak = dailyStreak();
+  $("dailyStatus").textContent = doneToday
+    ? `きょうは クリア！${streak >= 1 ? ` 🔥${streak}にち れんぞく` : ""}`
+    : `まいにち かわる 5もん。${streak > 0 ? `いま 🔥${streak}にち れんぞく！` : "ぜんコースから しゅつだい！"}`;
+  $("dailyButton").textContent = doneToday ? "もういちど あそぶ" : "5もんに ちょうせん！";
+  $("badgeLinkButton").textContent = `🏅 バッジずかん（${earnedBadgeCount()} / ${badgeDefs.length}）`;
   const levels = Object.keys(levelInfo);
   const perfectCount = levels.filter((level) => records.perfect[level]).length;
   const rankNames = ["みならい たんけんか", "かけだし たんけんか", "いちにんまえの たんけんか", "でんせつの たんけんめいじん"];
@@ -1155,6 +1303,24 @@ function renderTeacherList() {
     });
   }
 }
+$("dailyButton").addEventListener("click", startDailyChallenge);
+$("badgeLinkButton").addEventListener("click", () => { renderBadges(); showScreen("badgeScreen"); });
+$("badgeBackButton").addEventListener("click", () => showScreen("topScreen"));
+const mascotLines = ["やっほー！", "きょうも たんけんびより！", "めむろの こと、どれだけ しってる？", "タッチ ありがとう！", "にがてノートも みてみてね", "5れんぞく めざそう！", "きょうの ちょうせん、やった？", "いっしょに はっけんしよう！"];
+$("mascotButton").addEventListener("click", () => {
+  const mascot = document.querySelector(".hero-mascot");
+  mascot.classList.remove("is-bouncing");
+  void mascot.offsetWidth;  // アニメを毎回リセットするおまじない
+  mascot.classList.add("is-bouncing");
+  const bubble = $("mascotBubble");
+  const rare = Math.random() < 0.12;  // ときどきレア反応
+  bubble.textContent = rare ? "✨ ラッキー！ きょうは いいこと ありそう ✨" : mascotLines[Math.floor(Math.random() * mascotLines.length)];
+  bubble.hidden = false;
+  if (rare) launchConfetti(16);
+  playTone(rare ? 990 : 760);
+  clearTimeout(bubble._timer);
+  bubble._timer = setTimeout(() => { bubble.hidden = true; }, 2600);
+});
 $("teacherLinkButton").addEventListener("click", () => { renderTeacherList(); showScreen("teacherScreen"); });
 $("teacherBackButton").addEventListener("click", () => showScreen("topScreen"));
 $("printButton").addEventListener("click", () => window.print());
