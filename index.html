@@ -1,10 +1,10 @@
 <!doctype html>
 <!-- ============================================================
-  まちるだいすけと めむろたんけん (Phase 2・1ファイル完結版)
-  このファイル1つに、見た目(CSS)・問題データ・ふりがな辞書・
-  プログラムのすべてが入っています。写真は images フォルダを使います。
-  問題を直すときは、このファイル内の「問題データ」の目印コメントを
-  探してください。
+  まちるだいすけと めむろたんけん (Phase 3・1ファイル完結版)
+  この1ファイルに 見た目(CSS)・問題データ・ふりがな辞書・
+  プログラムのすべてが入っています。写真は images フォルダ、
+  オフライン対応は sw.js / manifest.webmanifest を使います。
+  問題を直すときは「問題データ」の目印コメントを探してください。
   ============================================================ -->
 <html lang="ja">
 <head>
@@ -12,6 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#71b957">
   <title>まちるだいすけと めむろたんけん</title>
+  <link rel="manifest" href="manifest.webmanifest">
   <style>
 /* ============================================================
    まちるだいすけと めむろたんけん - 見た目の設定（CSS）
@@ -410,6 +411,34 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
 @keyframes confetti-fall { to { transform: translateY(105vh) rotate(560deg); opacity: .65; } }
 @media (prefers-reduced-motion: reduce) { .confetti { display: none; } }
 
+/* ---- Phase 3: よむボタン・先生用一覧・PWA ---- */
+.read-button {
+  margin-top: 8px; min-height: 44px; padding: 6px 16px;
+  border: 2px solid var(--grass); border-radius: 999px;
+  background: #f4fbef; color: #2f6b3a; font-size: .95rem; cursor: pointer;
+}
+.read-button:active { transform: translateY(2px); }
+
+.teacher-link-row { text-align: right; margin: 14px 6px 0; }
+.teacher-link { background: none; border: 0; padding: 8px; color: #58755f; text-decoration: underline; cursor: pointer; font-size: .82rem; }
+
+.teacher-screen { background: #fff; border-radius: 18px; padding: 16px 20px; }
+.teacher-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.teacher-head h2 { margin: 0; font-size: 1.15rem; }
+.teacher-btn { min-height: 44px; padding: 6px 14px; border: 2px solid #bdd0b7; border-radius: 12px; background: #f6fbf3; cursor: pointer; }
+.teacher-btn-primary { background: var(--grass); border-color: var(--grass); color: #fff; }
+.teacher-note { font-size: .82rem; color: #667; }
+.teacher-item { border-bottom: 1px dashed #ccd8c6; padding: 9px 0; font-size: .9rem; line-height: 1.7; }
+.teacher-item .correct-choice { font-weight: 700; color: #2f6b3a; }
+#teacherList h3 { margin: 18px 0 4px; border-left: 6px solid var(--grass); padding-left: 8px; }
+
+@media print {
+  body * { visibility: hidden; }
+  #teacherScreen, #teacherScreen * { visibility: visible; }
+  #teacherScreen { position: absolute; inset: 0; border-radius: 0; }
+  .teacher-head button { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -474,6 +503,10 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
         <div id="weakButtons" class="weak-buttons"></div>
       </div>
 
+      <p class="teacher-link-row">
+        <button id="teacherLinkButton" class="teacher-link" type="button">せんせいよう：もんだい いちらん（いんさつ）</button>
+      </p>
+
     </section>
 
     <section id="quizScreen" class="screen quiz-screen" hidden>
@@ -492,6 +525,7 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
           <div>
             <p id="levelLabel" class="course-label"></p>
             <h2 id="questionText"></h2>
+            <button id="readButton" class="read-button" type="button" aria-label="もんだいを こえで よむ">🔊 よむ</button>
           </div>
           <figure id="imageFrame" class="image-frame">
             <img id="questionImage" alt="">
@@ -535,6 +569,16 @@ rt { font-size: .5em; font-weight: 700; color: #315f44; }
           <button id="resultHomeButton" class="secondary-button" type="button">トップに戻る</button>
         </div>
       </div>
+    </section>
+
+    <section id="teacherScreen" class="screen teacher-screen" hidden>
+      <div class="teacher-head">
+        <button id="teacherBackButton" class="teacher-btn" type="button">← もどる</button>
+        <h2>もんだい いちらん（せんせいよう）</h2>
+        <button id="printButton" class="teacher-btn teacher-btn-primary" type="button">🖨 いんさつ</button>
+      </div>
+      <p class="teacher-note">この一覧は index.html 内の問題データから自動生成されます。★が正解、（　）内は出典です。</p>
+      <div id="teacherList"></div>
     </section>
 
   </main>
@@ -806,7 +850,24 @@ function shuffleChoices(item) {
   return choices;
 }
 
+const speechSupported = "speechSynthesis" in window;
+function stopSpeech() { if (speechSupported) window.speechSynthesis.cancel(); }
+function speakCurrent() {
+  if (!speechSupported) return;
+  const item = questions[state.queue[state.index]];
+  if (!item) return;
+  const parts = $("feedback").hidden
+    ? [item.question, ...state.currentChoices.map((choice, i) => `${i + 1}。${choice.text}`)]
+    : [item.explanation];
+  stopSpeech();
+  const utterance = new SpeechSynthesisUtterance(parts.join("。"));
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.9;
+  window.speechSynthesis.speak(utterance);
+}
+
 function showScreen(id) {
+  stopSpeech();
   screens.forEach((screen) => { screen.hidden = screen.id !== id; });
   if (id === "topScreen") renderTopScreen();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -921,6 +982,7 @@ function chooseAnswer(selected) {
 }
 
 function nextQuestion() {
+  stopSpeech();
   state.index += 1;
   if (state.index < state.queue.length) {
     renderQuestion();
@@ -1076,6 +1138,28 @@ $("homeButton").addEventListener("click", goHome);
 $("resultHomeButton").addEventListener("click", goHome);
 $("retryButton").addEventListener("click", () => startQuiz(state.level));
 $("reviewButton").addEventListener("click", () => startQuiz(state.level, [...new Set(state.wrong)], true));
+function renderTeacherList() {
+  const wrap = $("teacherList");
+  wrap.replaceChildren();
+  for (const [level, info] of Object.entries(levelInfo)) {
+    const heading = document.createElement("h3");
+    heading.textContent = `${info.name}（${info.label}）`;
+    wrap.appendChild(heading);
+    questions.filter((q) => q.level === level).forEach((q, i) => {
+      const item = document.createElement("div");
+      item.className = "teacher-item";
+      const choices = q.choices.map((c, j) =>
+        j === q.answer ? `<span class="correct-choice">★${escapeKidText(c)}</span>` : `・${escapeKidText(c)}`).join("　");
+      item.innerHTML = `<strong>${i + 1}. ${escapeKidText(q.question)}</strong><br>${choices}<br><small>${escapeKidText(q.explanation)}（${escapeKidText(q.source)}）</small>`;
+      wrap.appendChild(item);
+    });
+  }
+}
+$("teacherLinkButton").addEventListener("click", () => { renderTeacherList(); showScreen("teacherScreen"); });
+$("teacherBackButton").addEventListener("click", () => showScreen("topScreen"));
+$("printButton").addEventListener("click", () => window.print());
+$("readButton").addEventListener("click", speakCurrent);
+if (!speechSupported) $("readButton").hidden = true;
 $("nextButton").addEventListener("click", () => {
   if ($("feedback").hidden) return;
   $("feedback").hidden = true;
@@ -1091,6 +1175,13 @@ $("soundButton").addEventListener("click", () => {
 updateResumeButton();
 renderTopScreen();
 applyKidText();
+
+/* ---- オフライン対応(PWA): 一度開けば通信なしでも動く ---- */
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => { /* 未対応環境でもアプリ本体は動く */ });
+  });
+}
 
 </script>
 </body>
