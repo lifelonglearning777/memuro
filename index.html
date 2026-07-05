@@ -658,6 +658,73 @@ button:focus-visible, input:focus-visible { outline: 3px solid #1667c1; outline-
   .hero-mascot { width: 92px; height: 92px; }
 }
 
+/* ============================================================
+   Phase 8: クライマックス演出と日本語改行の改善
+   ============================================================ */
+/* 日本語の折り返しを賢く: 見出しは行の長さを均等に、本文は最後の行が短くなりすぎないように */
+h1, h2, h3, .level-name, #resultTitle, .rank-title, .weak-sub { text-wrap: balance; }
+p, #resultSummary, .teacher-note, .certificate-body { text-wrap: pretty; }
+.certificate-body { display: block; max-width: 26em; margin: 4px auto; text-wrap: balance; }
+
+/* 結果画面のまちるだいすけ(絵文字サークルを卒業) */
+.result-seal {
+  width: 96px; height: 96px; margin: 0 auto 6px;
+  border: 0; background: #fff; border-radius: 50%;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--corn), 0 8px 18px rgba(31,58,40,.2);
+  display: grid; place-items: center; overflow: hidden;
+}
+.result-seal img { width: 78%; height: 78%; object-fit: contain; }
+.result-card.fail .result-seal { box-shadow: 0 0 0 4px #fff, 0 0 0 7px #cfd8c6, 0 8px 18px rgba(31,58,40,.15); }
+@keyframes seal-hop { 0%{transform:translateY(0)} 30%{transform:translateY(-10px)} 60%{transform:translateY(2px)} 100%{transform:translateY(0)} }
+.result-seal.is-happy { animation: seal-hop .7s ease .2s 2; }
+
+/* 点数のカウントアップ演出 */
+@keyframes score-pop { 0%{transform:scale(.7)} 70%{transform:scale(1.12)} 100%{transform:scale(1)} }
+#resultScore.is-counting { display: inline-block; animation: score-pop .5s ease; }
+
+/* レベルアップをチップ表示に */
+.level-up-note {
+  display: inline-block; margin: 8px auto 0; padding: 6px 16px;
+  background: linear-gradient(100deg, #fff3c4, #ffe28a); border-radius: 999px;
+  box-shadow: 0 3px 0 rgba(140,110,20,.25); color: #7a5b00;
+}
+
+/* 「ごうかく」はんこ: 日本の認定証らしさの決め手 */
+.certificate { position: relative; }
+.pass-stamp {
+  position: absolute; right: 14px; bottom: 12px;
+  width: 74px; height: 74px; display: grid; place-items: center;
+  border: 3.5px solid #d33a2c; border-radius: 50%;
+  box-shadow: inset 0 0 0 2.5px #fff, inset 0 0 0 5px #d33a2c;
+  color: #d33a2c; font-weight: 700; font-size: 1.05rem; line-height: 1.15; text-align: center;
+  transform: rotate(-12deg); opacity: .92; background: rgba(255,255,255,.6);
+}
+@keyframes stamp-in {
+  0% { transform: rotate(-12deg) scale(2.1); opacity: 0; }
+  60% { transform: rotate(-12deg) scale(.94); opacity: 1; }
+  100% { transform: rotate(-12deg) scale(1); opacity: .92; }
+}
+.pass-stamp.is-stamping { animation: stamp-in .45s cubic-bezier(.2,.9,.3,1.4) .55s backwards; }
+@media (max-width: 700px) { .pass-stamp { width: 60px; height: 60px; font-size: .9rem; right: 8px; bottom: 8px; } }
+
+/* 紙吹雪v2: 大きさと形にばらつき+横に流れる */
+@keyframes confetti-drift {
+  to { transform: translate(var(--dx, 0px), 106vh) rotate(var(--spin, 540deg)); opacity: .6; }
+}
+.confetti { animation-name: confetti-drift; }
+@media (prefers-reduced-motion: reduce) {
+  .result-seal.is-happy, #resultScore.is-counting, .pass-stamp.is-stamping { animation: none; }
+}
+
+/* アイコンの「設計された感」: カードのアイコンを淡い色の丸チップに */
+.level-icon {
+  width: 66px; height: 66px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: color-mix(in srgb, var(--accent) 13%, #fff);
+}
+.level-icon .ui-icon { width: 36px; height: 36px; margin: 0; }
+.ui-icon { stroke-width: 2.1; }
+
 </style>
 </head>
 <body>
@@ -790,7 +857,9 @@ button:focus-visible, input:focus-visible { outline: 3px solid #1667c1; outline-
 
     <section id="resultScreen" class="screen result-screen" hidden>
       <div id="resultCard" class="result-card">
-        <div id="resultSeal" class="result-seal" aria-hidden="true">🌽</div>
+        <div id="resultSeal" class="result-seal" aria-hidden="true">
+          <img src="images/machiru-front.png" alt="">
+        </div>
         <p id="resultKicker" class="eyebrow"></p>
         <h2 id="resultTitle"></h2>
         <div class="score-display"><strong id="resultScore">0</strong><span>/ 25点</span></div>
@@ -799,9 +868,10 @@ button:focus-visible, input:focus-visible { outline: 3px solid #1667c1; outline-
         <div id="certificate" class="certificate" hidden>
           <p>認 定 証</p>
           <strong id="certificateCourse"></strong>
-          <span>芽室町のことをよく学び、全問正解したことを認定します。</span>
+          <span class="certificate-body">芽室町のことをよく学び、全問正解したことを認定します。</span>
           <label class="certificate-name">なまえ <input id="certificateName" type="text" maxlength="12" placeholder="ここに かいてね" autocomplete="off"></label>
           <p id="certificateDate" class="certificate-date"></p>
+          <span id="passStamp" class="pass-stamp" aria-hidden="true">ごう<br>かく</span>
         </div>
         <div class="result-actions">
           <button id="retryButton" class="primary-button" type="button">もう一度挑戦</button>
@@ -1247,6 +1317,24 @@ function nextQuestion() {
   }
 }
 
+function animateScore(target) {
+  const el = $("resultScore");
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced || !window.requestAnimationFrame || target === 0) { el.textContent = target; return; }
+  el.classList.remove("is-counting");
+  void el.offsetWidth;
+  el.classList.add("is-counting");
+  const duration = 750;
+  const start = performance.now();
+  function tick(now) {
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(target * eased);
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 function showResult() {
   localStorage.removeItem(STORAGE_KEY);
   updateResumeButton();
@@ -1254,7 +1342,7 @@ function showResult() {
   const total = state.queue.length;
   const passed = !state.reviewMode && total === 25 && state.score === 25;
   $("resultCard").classList.toggle("fail", !passed);
-  $("resultScore").textContent = state.score;
+  animateScore(state.score);
   document.querySelector(".score-display span").innerHTML = `/ ${total}<ruby>点<rt>てん</rt></ruby>`;
   $("resultKicker").innerHTML = `${kidHtml(levelInfo[state.level].name)}（${kidHtml(levelInfo[state.level].label)}）`;
   setKidHtml($("resultTitle"), passed ? "たんけんクリア！" : state.reviewMode ? "復習できたね！" : "もう一回チャレンジ！");
@@ -1270,10 +1358,16 @@ function showResult() {
     if (state.score === 25) { if (!records.perfect[state.level]) addXp(50); records.perfect[state.level] = true; }
     saveRecords();
   }
+  $("resultSeal").classList.toggle("is-happy", passed);
   if (passed) {
     $("certificateName").value = "";  // 名前は毎回まっさら(保存しない)
     $("certificateDate").innerHTML = todayHtml();
-    launchConfetti(44);
+    const stamp = $("passStamp");
+    stamp.classList.remove("is-stamping");
+    void stamp.offsetWidth;
+    stamp.classList.add("is-stamping");
+    launchConfetti(50);
+    setTimeout(() => launchConfetti(28), 600);
   }
   if (state.dailyMode) {
     $("resultKicker").textContent = "🌞 きょうの ちょうせん";
@@ -1291,7 +1385,7 @@ function showResult() {
   const leveledUp = newLevel > levelOf(state.xpAtStart || 0);
   $("levelUpNote").hidden = !leveledUp;
   if (leveledUp) {
-    $("levelUpNote").textContent = `🎉 レベルアップ！ いま Lv.${newLevel}`;
+    $("levelUpNote").textContent = `レベルアップ！ いま Lv.${newLevel} ⭐`;
     launchConfetti(26);
   }
   playTone(passed ? 880 : 440);
@@ -1444,7 +1538,12 @@ function launchConfetti(count) {
     piece.setAttribute("aria-hidden", "true");
     piece.style.left = `${Math.random() * 100}vw`;
     piece.style.background = colors[index % colors.length];
-    piece.style.animationDelay = `${Math.random() * 0.5}s`;
+    piece.style.animationDelay = `${Math.random() * 0.6}s`;
+    piece.style.width = `${6 + Math.random() * 7}px`;
+    piece.style.height = `${8 + Math.random() * 9}px`;
+    if (index % 3 === 0) piece.style.borderRadius = "50%";
+    piece.style.setProperty("--dx", `${(Math.random() * 2 - 1) * 140}px`);
+    piece.style.setProperty("--spin", `${360 + Math.random() * 420}deg`);
     document.body.appendChild(piece);
     setTimeout(() => piece.remove(), 3000);
   }
