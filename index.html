@@ -1088,6 +1088,73 @@ body { background: linear-gradient(180deg, #e2f4fc 0%, #f4eed2 46%, #f9f3d4 100%
   .certificate { max-width: 100%; box-sizing: border-box; }
 }
 
+/* ============================================================
+   Phase 17-A: 不具合修正(写真カーテンの見切れ / ロゴ白フチの崩れ)
+   ============================================================ */
+/* ロゴ: 何十回も重ねる古い影 → 1本のなめらかな輪郭線に。拡大しても崩れない */
+.hero h1 {
+  text-shadow: 0 6px 14px rgba(24, 52, 43, .35);
+  -webkit-text-stroke: 7px #fff;
+  paint-order: stroke fill;   /* 白い縁を先に塗り、その上に文字色 */
+}
+@media (max-width: 640px) { .hero h1 { -webkit-text-stroke-width: 5px; } }
+
+/* 写真カーテン: 文字が切れないよう高さと文字サイズを最適化 */
+.image-curtain { padding: 6px; }
+.image-curtain span { font-size: 1.5rem; }
+.image-curtain strong { font-size: .74rem; line-height: 1.3; }
+@media (max-width: 640px) {
+  .image-frame { height: auto; min-height: 120px; aspect-ratio: 16 / 9; }
+  .image-curtain span { font-size: 1.3rem; }
+  .image-curtain strong { font-size: .72rem; }
+}
+
+/* ============================================================
+   Phase 17-B: スペシャル認定証・月末ごほうび画面
+   ============================================================ */
+/* バッジ全部達成のスペシャル認定証(金→虹色の枠) */
+.certificate.certificate-special {
+  border-image: linear-gradient(120deg, #e85348, #f4c531, #5aa845, #3d93b8, #9b59b6) 1;
+  box-shadow: inset 0 0 0 5px #fffdf4, inset 0 0 0 7px #f4c531, 0 12px 30px rgba(120,80,0,.28);
+}
+.certificate.certificate-special .cert-rosette { transform: scale(1.12); }
+
+/* 月末ごほうびのモーダル */
+.reward-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(24, 52, 43, .55);
+  display: grid; place-items: center; padding: 20px;
+  animation: reward-fade .3s ease;
+}
+@keyframes reward-fade { from { opacity: 0; } }
+.reward-modal {
+  position: relative; overflow: hidden;
+  width: min(340px, 92vw); background: #fff; border-radius: 26px;
+  padding: 24px 22px 20px; text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  animation: reward-pop .45s cubic-bezier(.2,.9,.3,1.4);
+}
+@keyframes reward-pop { from { transform: scale(.7); opacity: 0; } }
+.reward-mascot { width: 92px; height: 92px; object-fit: contain; }
+.reward-month { margin: 6px 0 0; font-weight: 700; color: #c9962a; }
+.reward-title { margin: 4px 0 6px; font-size: 1.5rem; color: var(--grass-dark); }
+.reward-body { margin: 0 0 16px; font-size: .95rem; color: #4a5a48; line-height: 1.6; }
+.reward-close {
+  min-height: 50px; padding: 10px 22px; border: 0; border-radius: 16px;
+  background: var(--grass-dark); color: #fff; font-size: 1.05rem; cursor: pointer;
+  box-shadow: 0 4px 0 #225329;
+}
+.reward-close:active { transform: translateY(2px); box-shadow: 0 2px 0 #225329; }
+.reward-shine {
+  position: absolute; top: -60%; left: -30%; width: 60%; height: 220%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent);
+  transform: skewX(-18deg); animation: reward-sweep 1.4s ease .3s both;
+}
+@keyframes reward-sweep { to { left: 130%; } }
+@media (prefers-reduced-motion: reduce) {
+  .reward-overlay, .reward-modal, .reward-shine { animation: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1276,7 +1343,17 @@ body { background: linear-gradient(180deg, #e2f4fc 0%, #f4eed2 46%, #f9f3d4 100%
       <div id="teacherList"></div>
     </section>
 
-  </main>
+    <div id="rewardOverlay" class="reward-overlay" hidden>
+    <div class="reward-modal" role="dialog" aria-label="ごほうび">
+      <span class="reward-shine" aria-hidden="true"></span>
+      <img class="reward-mascot" src="images/machiru-wave.png" alt="">
+      <p id="rewardMonth" class="reward-month"></p>
+      <h2 class="reward-title">こんげつ ぜんぶ クリア！</h2>
+      <p id="rewardBody" class="reward-body"></p>
+      <button id="rewardClose" class="reward-close" type="button">やったー！ とじる</button>
+    </div>
+  </div>
+</main>
 
   <script>
 /* ============================================================
@@ -1489,10 +1566,10 @@ function loadRecords() {
   try {
     const saved = JSON.parse(localStorage.getItem(RECORDS_KEY));
     if (saved && typeof saved === "object") {
-      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {}, daily: saved.daily || { dates: [] }, xp: saved.xp || 0, play: saved.play || { dates: [] } };
+      return { best: saved.best || {}, perfect: saved.perfect || {}, maxCombo: saved.maxCombo || 0, weak: saved.weak || {}, daily: saved.daily || { dates: [] }, xp: saved.xp || 0, play: saved.play || { dates: [] }, rewards: saved.rewards || {} };
     }
   } catch { /* 破損時は初期化 */ }
-  return { best: {}, perfect: {}, maxCombo: 0, weak: {}, daily: { dates: [] }, xp: 0, play: { dates: [] } };
+  return { best: {}, perfect: {}, maxCombo: 0, weak: {}, daily: { dates: [] }, xp: 0, play: { dates: [] }, rewards: {} };
 }
 function saveRecords() { localStorage.setItem(RECORDS_KEY, JSON.stringify(records)); }
 function weakQueue(level) {
@@ -1652,7 +1729,7 @@ function chooseAnswer(selected) {
     state.score += 1;
     if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-wave.png";
     setKidHtml($("feedbackTitle"), ["やったね！", "すごい！", "いい調子！"][state.index % 3]);
-    playTone(660);
+    playTone(Math.min(660 + (state.combo || 0) * 45, 1180));  // 連続正解ほど高い音に
     state.combo = (state.combo || 0) + 1;
     removeWeak(item.level, item.question);
     addXp(10);
@@ -1666,7 +1743,7 @@ function chooseAnswer(selected) {
     state.wrong.push(state.queue[state.index]);
     if ($("feedbackMascot")) $("feedbackMascot").src = "images/machiru-front.png";
     setKidHtml($("feedbackTitle"), ["次はいけるよ！", "だいじょうぶ、発見できたね！"][state.index % 2]);
-    playTone(330);
+    playMelody(WRONG_SOUND);  // 正解と はっきり ちがう音
     state.combo = 0;
     $("comboChip").hidden = true;
     addWeak(item.level, item.question);
@@ -1731,6 +1808,12 @@ function showResult() {
     if (state.score === 25) { if (!records.perfect[state.level]) addXp(50); records.perfect[state.level] = true; }
     saveRecords();
   }
+  const allBadgesNow = earnedBadgeCount() >= badgeDefs.length;
+  $("certificate").classList.toggle("certificate-special", passed && allBadgesNow);
+  if (passed && allBadgesNow) {
+    setKidHtml($("resultTitle"), "ぜんバッジ たっせい！");
+    $("resultSummary").textContent = "10このバッジを ぜんぶ あつめた、めむろ たんけんの グランドマスターです！";
+  }
   $("resultSeal").classList.toggle("is-happy", passed);
   $("sealRays").classList.toggle("show", passed);
   if (passed) {
@@ -1747,8 +1830,9 @@ function showResult() {
       void cert.offsetWidth;
       cert.classList.add("stamp-shake");
     }, 1000);
-    launchConfetti(50);
-    setTimeout(() => launchConfetti(28), 600);
+    launchConfetti(allBadgesNow ? 90 : 50);
+    setTimeout(() => launchConfetti(allBadgesNow ? 60 : 28), 600);
+    if (allBadgesNow) setTimeout(() => launchConfetti(60), 1200);
   }
   if (state.dailyMode) {
     $("resultKicker").innerHTML = `${SVGI.sun}きょうの ちょうせん`;
@@ -1775,7 +1859,13 @@ function showResult() {
     $("levelUpNote").textContent = `レベルアップ！ いま Lv.${newLevel}`;
     launchConfetti(26);
   }
-  playTone(passed ? 880 : 440);
+  // 締めの音: 全問正解はファンファーレ、それ以外は やさしい音
+  if (passed) {
+    const allBadges = earnedBadgeCount() >= badgeDefs.length;
+    playMelody(allBadges ? SPECIAL_FANFARE : FANFARE);
+  } else {
+    playMelody(state.reviewMode ? [[523,0.16],[659,0.3]] : [[494,0.16],[440,0.28]]);
+  }
 }
 
 /* ---- トップ画面のがんばり表示 ---- */
@@ -1892,7 +1982,36 @@ function renderBadges() {
   }));
 }
 
+function playedDaysInMonth(offset) {
+  const d = new Date();
+  d.setMonth(d.getMonth() + offset);
+  const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  return dailyDates().filter((x) => x.startsWith(ym)).length;
+}
+function maybeShowMonthlyReward() {
+  const now = new Date();
+  const day = now.getDate();
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  // 「月の後半(16日以降)」かつ「その月に10日以上クリア」で、まだ祝っていない月なら表示
+  const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const goal = 10;
+  const done = playedDaysInMonth(0);
+  records.rewards = records.rewards || {};
+  if (day >= 16 && done >= goal && !records.rewards[ym]) {
+    records.rewards[ym] = true;
+    saveRecords();
+    $("rewardMonth").textContent = `${now.getMonth() + 1}がつ`;
+    $("rewardBody").textContent = `きょうの ちょうせんを ${done}にちも クリア！ まいにち よく がんばったね。まちるだいすけも だいまんぞく！`;
+    $("rewardOverlay").hidden = false;
+    launchConfetti(70);
+    playMelody(SPECIAL_FANFARE);
+    return true;
+  }
+  return false;
+}
+
 function renderTopScreen() {
+  maybeShowMonthlyReward();
   const doneToday = dailyDoneToday();
   const streak = dailyStreak();
   $("dailyStatus").innerHTML = doneToday
@@ -1997,6 +2116,29 @@ function confirmQuit() {
   if (window.confirm("ここまでの きろくを のこして、トップに もどりますか？")) goHome();
 }
 
+/* 複数の音を順番に鳴らす(ファンファーレ等に使用) */
+function playMelody(notes) {
+  if (!state.sound || !window.AudioContext) return;
+  const ctx = new AudioContext();
+  let t = ctx.currentTime;
+  for (const [freq, dur] of notes) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.09, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + dur);
+    t += dur * 0.92;
+  }
+}
+const FANFARE = [[523,0.16],[659,0.16],[784,0.16],[1046,0.42]];      // ドミソド↑
+const SPECIAL_FANFARE = [[523,0.14],[659,0.14],[784,0.14],[1046,0.2],[880,0.14],[1046,0.14],[1318,0.5]];
+const WRONG_SOUND = [[300,0.14],[220,0.24]];                          // しょんぼり下降
+
 function playTone(frequency) {
   if (!state.sound || !window.AudioContext) return;
   const context = new AudioContext();
@@ -2066,6 +2208,7 @@ function updateTeacherLinkVisibility() {
 }
 window.addEventListener("hashchange", updateTeacherLinkVisibility);
 updateTeacherLinkVisibility();
+$("rewardClose").addEventListener("click", () => { $("rewardOverlay").hidden = true; });
 $("teacherLinkButton").addEventListener("click", () => { renderTeacherList(); showScreen("teacherScreen"); });
 $("teacherBackButton").addEventListener("click", () => showScreen("topScreen"));
 $("printButton").addEventListener("click", () => window.print());
