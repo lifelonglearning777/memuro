@@ -1043,6 +1043,51 @@ body { background: linear-gradient(180deg, #e2f4fc 0%, #f4eed2 46%, #f9f3d4 100%
   .level-record { margin-top: 3px; }
 }
 
+/* ============================================================
+   Phase 16: iPhone縦持ちの はみ出し修正(トップのロゴ / 結果カード)
+   ------------------------------------------------------------
+   原因: 後から足した装飾CSSが、スマホ用の幅指定より優先されて
+   要素が画面幅を超えていた。ここで最終的に打ち消す。
+   ============================================================ */
+@media (max-width: 640px) {
+  /* 画面外への横あふれを全体で防ぐ(最後の安全網) */
+  html, body { overflow-x: hidden; }
+  main, .screen, .hero, .status-band, .daily-card, .level-card,
+  .result-card, .question-card, .weak-area, .badge-screen, .teacher-screen {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* トップのロゴ: マスコットの下に検定名を縦積みして中央に収める */
+  .hero { position: relative; }
+  .hero-center {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: auto;
+    max-width: 92%;
+    margin: 0 auto;
+    padding: 8px 12px;
+    text-align: center;
+  }
+  .hero-mascot { margin: 0 auto; }
+  .hero h1 { margin: 0; text-align: center; }
+
+  /* 結果カード: 画面内にきっちり収め、文章の途切れを防ぐ */
+  .result-card {
+    width: 100%;
+    margin: 0 auto;
+    padding: 18px 16px;
+    overflow: visible;      /* はんこ等が切れないよう装飾のhiddenを解除 */
+  }
+  .result-card h2,
+  #resultSummary,
+  .certificate-body { overflow-wrap: break-word; }
+
+  /* 認定証も画面幅に追従 */
+  .certificate { max-width: 100%; box-sizing: border-box; }
+}
+
 </style>
 </head>
 <body>
