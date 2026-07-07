@@ -1155,6 +1155,63 @@ body { background: linear-gradient(180deg, #e2f4fc 0%, #f4eed2 46%, #f9f3d4 100%
   .reward-overlay, .reward-modal, .reward-shine { animation: none; }
 }
 
+/* ============================================================
+   Phase 18: 実機フィードバック対応
+   (ロゴのフチ / つぎへボタン / クイズ縦収まり / 結果画面はみ出し)
+   ============================================================ */
+
+/* 1) ロゴの白フチが太すぎてモヤモヤ → 細く上品に。二重の影で立体感 */
+.hero h1 {
+  -webkit-text-stroke-width: 4px;
+  text-shadow: 0 2px 0 rgba(255,255,255,.9), 0 5px 12px rgba(24, 52, 43, .32);
+}
+@media (max-width: 640px) { .hero h1 { -webkit-text-stroke-width: 3.5px; } }
+
+/* 2) 写真カーテンの高さ指定を戻す(16/9指定で逆に大きくなっていた) */
+@media (max-width: 640px) {
+  .image-frame { height: 92px; min-height: 0; aspect-ratio: auto; }
+}
+@media (max-width: 640px) and (max-height: 720px) {
+  .image-frame { height: 76px; }
+}
+
+/* 3) クイズ画面を もう一段コンパクトに(スクロールせず つぎへ まで) */
+@media (max-width: 640px) {
+  .question-card { padding: 9px 12px; }
+  .question-main { gap: 6px; }
+  #questionText { font-size: 1.08rem; line-height: 1.4; }
+  .read-button { min-height: 34px; margin-top: 2px; }
+  .choice-list { gap: 7px; }
+  .choice-button { min-height: 46px; padding: 7px 12px; }
+  .choice-button .choice-text { font-size: 1rem; }
+  .feedback { padding: 7px 10px; gap: 6px; }
+  /* つぎへボタン: 画面のいちばん下から少し浮かせて押しやすく */
+  .feedback { padding-bottom: 10px; }
+  .next-button { min-height: 48px; padding: 9px 18px; }
+}
+
+/* 4) 結果画面: まちがえてボタンが3つでも画面に収める */
+@media (max-width: 640px) {
+  .result-card { padding: 16px 14px; }
+  .result-seal, #sealRays { width: 76px; height: 76px; }
+  .result-card h2, #resultTitle { font-size: 1.5rem; margin: 2px 0; }
+  .score-display, .result-card .score-display { margin: 2px 0; }
+  #resultScore { font-size: 2.4rem; }
+  #resultSummary { font-size: .9rem; margin: 4px 0; }
+  .level-up-note { margin-top: 6px; padding: 5px 14px; font-size: .9rem; }
+  /* ボタンを縦に積んで、全部 画面内に収める */
+  .result-actions { flex-direction: column; gap: 8px; margin-top: 10px; }
+  .result-actions button { width: 100%; min-height: 48px; }
+  /* 認定証は全問正解のときだけ出るので、そのときは従来どおり */
+}
+/* 背の低い端末では結果カードの上下をさらに詰める */
+@media (max-width: 640px) and (max-height: 750px) {
+  .result-seal, #sealRays { width: 64px; height: 64px; }
+  .result-card h2, #resultTitle { font-size: 1.3rem; }
+  #resultScore { font-size: 2rem; }
+  .result-actions { margin-top: 8px; }
+}
+
 </style>
 </head>
 <body>
