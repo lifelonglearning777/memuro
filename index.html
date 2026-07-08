@@ -1212,6 +1212,33 @@ body { background: linear-gradient(180deg, #e2f4fc 0%, #f4eed2 46%, #f9f3d4 100%
   .result-actions { margin-top: 8px; }
 }
 
+/* ============================================================
+   Phase 19: レイアウト根治(中央固定をやめ、自然に上から並べる)
+   ------------------------------------------------------------
+   原因: main が「画面の縦中央に固定+高さ100vh」だったため、
+   内容が画面より長いと上下が切れ(結果画面はみ出し)、
+   内容が短いと余白が異常に伸びていた(画面比率の崩れ)。
+   スマホでは中央固定を解除し、上から自然に並べる。
+   ============================================================ */
+@media (max-width: 640px) {
+  main {
+    min-height: 0;              /* 100vh固定をやめる → 間延び解消 */
+    display: block;             /* grid中央寄せをやめる → はみ出し解消 */
+    place-items: initial;
+    padding: 6px 10px 16px;
+  }
+  .screen { width: 100%; }
+
+  /* 結果画面: 中央固定でなく上から並べ、収まらなければ自然にスクロール */
+  #resultScreen { display: block; }
+  .result-card { margin: 0 auto; }
+}
+
+/* 背の低い端末での特別扱いは、上の block 化と両立させる（中央寄せを復活させない） */
+@media (max-width: 640px) and (max-height: 750px) {
+  main { align-items: initial; }
+}
+
 </style>
 </head>
 <body>
